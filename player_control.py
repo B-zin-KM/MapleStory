@@ -53,6 +53,6 @@ while running:
     handle_events()
     update_world()
     render_world()
-    delay(0.3)
+    delay(0.01)
 
 close_canvas()

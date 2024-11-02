@@ -1,4 +1,4 @@
-from pico2d import load_image, SDL_KEYDOWN, SDLK_SPACE, get_time, SDLK_RIGHT, SDLK_LEFT, SDL_KEYUP, SDLK_a
+from pico2d import load_image, SDL_KEYDOWN, SDLK_SPACE, get_time, SDLK_RIGHT, SDLK_LEFT, SDL_KEYUP, get_time, draw_rectangle
 import math
 
 
@@ -17,6 +17,10 @@ def left_up(e):
 
 class Idle:
 
+    idle_time = 0.5
+    elapsed_time = 0.0
+    last_time = 0.0
+
     @staticmethod
     def enter(player, e):
         if player.action == 1:      # 오른쪽 걷기
@@ -25,6 +29,8 @@ class Idle:
             player.action = 4       # 왼쪽 아이들
         player.dir = 0
         player.frame = 0
+        Idle.elapsed_time = 0.0
+        Idle.last_time = get_time()
 
     @staticmethod
     def exit(player, e):
@@ -32,14 +38,34 @@ class Idle:
 
     @staticmethod
     def do(player):
-        player.frame = (player.frame + 1) % 3
+        current_time = get_time()
+        time_difference = current_time - Idle.last_time
+        Idle.last_time = current_time
+        Idle.elapsed_time += time_difference
+
+        if Idle.elapsed_time >= Idle.idle_time:
+            Idle.elapsed_time = 0
+            player.frame = (player.frame + 1) % 4
 
     @staticmethod
     def draw(player):
-        player.image.clip_draw(player.frame * 59, player.action * 106, 59, 106, player.x, player.y)
+        if player.action == 3:
+            player.image.clip_draw(player.frame * 59, 338, 59, 66, player.x, player.y)
+        elif player.action == 4:
+            player.image.clip_draw(player.frame * 59, 444, 59, 66, player.x, player.y)
+        # 캐릭터 주변에 사각형 테두리 그리기
+        left = player.x - 59 // 2 + 16
+        bottom = player.y - 66 // 2
+        right = player.x + 59 // 2 + 2
+        top = player.y + 70 // 2
+        draw_rectangle(left, bottom, right, top)
 
 
 class Walk:
+
+    idle_time = 0.1
+    elapsed_time = 0.0
+    last_time = 0.0
 
     @staticmethod
     def enter(player, e):
@@ -47,6 +73,8 @@ class Walk:
             player.dir, player.action = 1, 1
         elif left_down(e) or right_up(e):
             player.dir, player.action = -1, 2
+        Walk.elapsed_time = 0.0
+        Walk.last_time = get_time()
 
     @staticmethod
     def exit(player, e):
@@ -54,12 +82,30 @@ class Walk:
 
     @staticmethod
     def do(player):
-        player.frame = (player.frame + 1) % 4
-        player.x += player.dir * 5
+
+        current_time = get_time()
+        time_difference = current_time - Walk.last_time
+        Walk.last_time = current_time
+        Walk.elapsed_time += time_difference
+
+        if Walk.elapsed_time >= Walk.idle_time:
+            Walk.elapsed_time = 0
+            player.frame = (player.frame + 1) % 4
+
+        player.x += player.dir * 2
 
     @staticmethod
     def draw(player):
-        player.image.clip_draw(player.frame * 59, player.action * 106, 59, 106, player.x, player.y)
+        if player.action == 1:
+            player.image.clip_draw(player.frame * 59, 126, 59, 66, player.x, player.y)
+        elif player.action == 2:
+            player.image.clip_draw(player.frame * 59, 232, 59, 66, player.x, player.y)
+        # 캐릭터 주변에 사각형 테두리 그리기
+        left = player.x - 59 // 2 + 16
+        bottom = player.y - 66 // 2
+        right = player.x + 59 // 2 + 2
+        top = player.y + 70 // 2
+        draw_rectangle(left, bottom, right, top)
 
 
 class StateMachine:
