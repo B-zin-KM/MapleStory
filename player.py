@@ -2,12 +2,6 @@ from pico2d import load_image, SDL_KEYDOWN, SDLK_SPACE, get_time, SDLK_RIGHT, SD
 import math
 
 
-def space_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
-
-def time_out(e):
-    return e[0] == 'TIME_OUT'
-
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
 
@@ -20,24 +14,17 @@ def left_down(e):
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
 
-def a_down(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
-
-def a_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_a
-
 
 class Idle:
 
     @staticmethod
     def enter(player, e):
-        if player.action == 0:
-            player.action = 2
-        elif player.action == 1:
-            player.action = 3
+        if player.action == 1:      # 오른쪽 걷기
+            player.action = 3       # 오른쪽 아이들
+        elif player.action == 2:    # 왼쪽 걷기
+            player.action = 4       # 왼쪽 아이들
         player.dir = 0
         player.frame = 0
-        player.wait_time = get_time()
 
     @staticmethod
     def exit(player, e):
@@ -45,46 +32,21 @@ class Idle:
 
     @staticmethod
     def do(player):
-        player.frame = (player.frame + 1) % 8
-        if get_time() - player.wait_time > 5:
-            player.state_machine.handle_event(('TIME_OUT', 0))
+        player.frame = (player.frame + 1) % 3
 
     @staticmethod
     def draw(player):
-        player.image.clip_draw(player.frame * 100, player.action * 100, 100, 100, player.x, player.y)
+        player.image.clip_draw(player.frame * 59, player.action * 106, 59, 106, player.x, player.y)
 
 
-class Sleep:
-
-    @staticmethod
-    def enter(player, e):
-        player.frame = 0
-
-    @staticmethod
-    def exit(player, e):
-        pass
-
-    @staticmethod
-    def do(player):
-        player.frame = (player.frame + 1) % 8
-
-    @staticmethod
-    def draw(player):
-        if player.action == 2:
-            player.image.clip_composite_draw(player.frame * 100, 200, 100, 100, math.pi / 2, '', player.x + 25, player.y - 25, 100,
-                                          100)
-        else:
-            player.image.clip_composite_draw(player.frame * 100, 300, 100, 100, math.pi / 2, '', player.x - 25, player.y - 25, 100,
-                                          100)
-
-class Run:
+class Walk:
 
     @staticmethod
     def enter(player, e):
         if right_down(e) or left_up(e):
             player.dir, player.action = 1, 1
         elif left_down(e) or right_up(e):
-            player.dir, player.action = -1, 0
+            player.dir, player.action = -1, 2
 
     @staticmethod
     def exit(player, e):
@@ -92,56 +54,21 @@ class Run:
 
     @staticmethod
     def do(player):
-        player.frame = (player.frame + 1) % 8
+        player.frame = (player.frame + 1) % 4
         player.x += player.dir * 5
 
     @staticmethod
     def draw(player):
-        player.image.clip_draw(player.frame * 100, player.action * 100, 100, 100, player.x, player.y)
-
-
-class AutoRun:
-    @staticmethod
-    def enter(player, e):
-        if player.action == 0 or player.action == 2:
-            player.action = 0
-            player.dir = -1
-        elif player.action == 1 or player.action == 3:
-            player.action = 1
-            player.dir = 1
-        player.wait_time = get_time()
-
-    @staticmethod
-    def exit(player, e):
-        pass
-
-    @staticmethod
-    def do(player):
-        player.frame = (player.frame + 1) % 8
-        player.x += player.dir * 10
-        if player.x >= 800:
-            player.dir, player.action = -1, 0
-        elif player.x <= 0:
-            player.dir, player.action = 1, 1
-        if get_time() - player.wait_time > 5:
-            player.state_machine.handle_event(('TIME_OUT', 0))
-
-    @staticmethod
-    def draw(player):
-        player.image.clip_draw(player.frame * 100, player.action * 100, 100, 100, player.x, player.y + 145, 500, 500)
+        player.image.clip_draw(player.frame * 59, player.action * 106, 59, 106, player.x, player.y)
 
 
 class StateMachine:
     def __init__(self, player):
         self.player = player
-        self.cur_state = Sleep
+        self.cur_state = Idle
         self.transition = {
-            Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, a_down: AutoRun, a_up: AutoRun,
-                   time_out: Sleep},
-            Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, a_down: AutoRun, a_up: AutoRun},
-            Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle, a_down: AutoRun,
-                    a_up: AutoRun},
-            AutoRun: {time_out: Idle, right_down: Run, right_up: Run, left_down: Run, left_up: Run}
+            Idle: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk},
+            Walk: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle}
         }
 
     def start(self):
@@ -154,8 +81,8 @@ class StateMachine:
         self.cur_state.draw(self.player)
 
     def handle_event(self, e):  # e : state_events
-        for check_evnet, next_state in self.transition[self.cur_state].items():
-            if check_evnet(e):
+        for check_event, next_state in self.transition[self.cur_state].items():
+            if check_event(e):
                 self.cur_state.exit(self.player, e)
                 self.cur_state = next_state
                 self.cur_state.enter(self.player, e)
@@ -165,11 +92,10 @@ class StateMachine:
 
 class Player:
     def __init__(self):
-        self.x, self.y = 400, 90
+        self.x, self.y = 400, 82
         self.frame = 0
-        self.action = 3
-        self.wait_time = 0
-        self.image = load_image('warrior_sprite.png')
+        self.action = 4
+        self.image = load_image('warrior_1.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start()
 
