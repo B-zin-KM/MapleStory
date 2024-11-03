@@ -1,4 +1,4 @@
-from pico2d import load_image, SDL_KEYDOWN, SDLK_SPACE, get_time, SDLK_RIGHT, SDLK_LEFT, SDL_KEYUP, get_time, draw_rectangle
+from pico2d import load_image, SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT, SDL_KEYUP, SDLK_DOWN, get_time, draw_rectangle
 import math
 
 
@@ -14,6 +14,12 @@ def left_down(e):
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
 
+def down_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_DOWN
+
+def down_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
+
 
 class Idle:
 
@@ -23,10 +29,10 @@ class Idle:
 
     @staticmethod
     def enter(player, e):
-        if player.action == 1:      # 오른쪽 걷기
-            player.action = 3       # 오른쪽 아이들
-        elif player.action == 2:    # 왼쪽 걷기
-            player.action = 4       # 왼쪽 아이들
+        if player.action == 1 or player.action == 7:      # 오른쪽 걷기, 오른쪽 엎드리기
+            player.action = 3                             # 오른쪽 아이들
+        elif player.action == 2 or player.action == 8:    # 왼쪽 걷기, 왼쪽 엎드리기
+            player.action = 4                             # 왼쪽 아이들
         player.dir = 0
         player.frame = 0
         Idle.elapsed_time = 0.0
@@ -63,7 +69,7 @@ class Idle:
 
 class Walk:
 
-    idle_time = 0.1
+    idle_time = 0.2
     elapsed_time = 0.0
     last_time = 0.0
 
@@ -92,7 +98,7 @@ class Walk:
             Walk.elapsed_time = 0
             player.frame = (player.frame + 1) % 4
 
-        player.x += player.dir * 2
+        player.x += player.dir * 1.5
 
     @staticmethod
     def draw(player):
@@ -108,13 +114,57 @@ class Walk:
         draw_rectangle(left, bottom, right, top)
 
 
+class Prone:
+
+    @staticmethod
+    def enter(player, e):
+        if player.action == 1 or player.action == 3:
+            player.dir, player.action = 0, 7
+        elif player.action == 2 or player.action == 4:
+            player.dir, player.action = 0, 8
+        player.frame = 1
+
+    @staticmethod
+    def exit(player, e):
+        pass
+
+    @staticmethod
+    def do(player):
+        pass
+
+    @staticmethod
+    def draw(player):
+        if player.action == 7:
+            player.x = player.x + 23
+            player.image.clip_draw(player.frame * 78, 575, 64, 39, player.x, player.y - 15)
+            player.x = player.x - 23
+            # 캐릭터 주변에 사각형 테두리 그리기
+            left = player.x - 78 // 2 + 26
+            bottom = player.y - 39 // 2 - 15
+            right = player.x + 78 // 2 + 18
+            top = player.y + 39 // 2 - 10
+            draw_rectangle(left, bottom, right, top)
+        elif player.action == 8:
+            player.x = player.x - 5
+            player.image.clip_draw(player.frame * 78, 679, 64, 39, player.x, player.y - 15)
+            player.x = player.x + 5
+            # 캐릭터 주변에 사각형 테두리 그리기
+            left = player.x - 78 // 2
+            bottom = player.y - 39 // 2 - 15
+            right = player.x + 78 // 2 - 8
+            top = player.y + 39 // 2 - 10
+            draw_rectangle(left, bottom, right, top)
+
+
 class StateMachine:
     def __init__(self, player):
         self.player = player
         self.cur_state = Idle
+        self.prone = False
         self.transition = {
-            Idle: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk},
-            Walk: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle}
+            Idle: {right_down: Walk, left_down: Walk, right_up: Walk, left_up: Walk, down_down: Prone, down_up: Idle},
+            Walk: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle},
+            Prone: {down_down: Prone, down_up: Idle, right_down: Walk, left_down: Walk, right_up: Idle, left_up: Idle}
         }
 
     def start(self):
