@@ -36,12 +36,14 @@ def reset_world():
 def update_world():
     for o in world:
         o.update()
-    pass
 
 
 def render_world():
     clear_canvas()
     for o in world:
+        print(player.state_machine.cur_state)
+        print(player.air)
+        print(player.x, player.y)
         o.draw()
     update_canvas()
 
@@ -53,6 +55,7 @@ while running:
     handle_events()
     update_world()
     render_world()
+
     delay(0.01)
 
 close_canvas()
