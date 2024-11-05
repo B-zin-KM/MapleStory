@@ -62,20 +62,20 @@ class Idle:
     def draw(player):
         if player.air:
             if player.dir == 1:
-                player.image.clip_draw(19, 549, 41, 66, player.x, player.y)
+                player.image.clip_draw(19, 549, 41, 66, player.x + 10, player.y)
             elif player.dir == -1:
-                player.image.clip_draw(19, 653, 41, 66, player.x, player.y)
+                player.image.clip_draw(19, 653, 41, 66, player.x + 10, player.y)
         else:
             if player.action == 3:
                 player.image.clip_draw(player.frame * 59, 338, 59, 66, player.x, player.y)
             elif player.action == 4:
                 player.image.clip_draw(player.frame * 59, 444, 59, 66, player.x, player.y)
         # 캐릭터 주변에 사각형 테두리 그리기
-        # left = player.x - 59 // 2 + 16
-        # bottom = player.y - 66 // 2
-        # right = player.x + 59 // 2 + 2
-        # top = player.y + 70 // 2
-        # draw_rectangle(left, bottom, right, top)
+        left = player.x - 59 // 2 + 16
+        bottom = player.y - 66 // 2
+        right = player.x + 59 // 2 + 2
+        top = player.y + 70 // 2
+        draw_rectangle(left, bottom, right, top)
 
 
 class Walk:
@@ -113,10 +113,16 @@ class Walk:
 
     @staticmethod
     def draw(player):
-        if player.action == 1:
-            player.image.clip_draw(player.frame * 59, 126, 59, 66, player.x, player.y)
-        elif player.action == 2:
-            player.image.clip_draw(player.frame * 59, 232, 59, 66, player.x, player.y)
+        if player.air:
+            if player.dir == 1:
+                player.image.clip_draw(19, 549, 41, 66, player.x + 10, player.y)
+            elif player.dir == -1:
+                player.image.clip_draw(19, 653, 41, 66, player.x + 10, player.y)
+        else:
+            if player.action == 1:
+                player.image.clip_draw(player.frame * 59, 126, 59, 66, player.x, player.y)
+            elif player.action == 2:
+                player.image.clip_draw(player.frame * 59, 232, 59, 66, player.x, player.y)
         # 캐릭터 주변에 사각형 테두리 그리기
         left = player.x - 59 // 2 + 16
         bottom = player.y - 66 // 2
@@ -167,60 +173,15 @@ class Prone:
             draw_rectangle(left, bottom, right, top)
 
 
-class Jump:
-
-    @staticmethod
-    def enter(player, e):
-        player.jumping = True
-        if player.action == 1 or player.action == 3 or player.action == 7:
-            player.dir, player.action = 1, 5
-        elif player.action == 2 or player.action == 4 or player.action == 8:
-            player.dir, player.action = -1, 6
-
-    @staticmethod
-    def exit(player, e):
-        pass
-
-    @staticmethod
-    def do(player):
-        if player.jumping:
-            if player.Jump_count == 0:
-                player.velocity = player.max_jump_velocity
-            player.y += player.velocity
-            player.velocity += player.gravity
-            player.Jump_count += 1
-
-            if player.Jump_count > 80 or player.velocity <= 0:
-                player.Jump_count = 0
-                player.jumping = False
-                player.state_machine.cur_state = Idle
-                Idle.enter(player,'None')
-
-
-    @staticmethod
-    def draw(player):
-        if player.dir == 1:
-            player.image.clip_draw(19, 549, 41, 66, player.x, player.y)
-        elif player.dir == -1:
-            player.image.clip_draw(19, 653, 41, 66, player.x, player.y)
-        # 캐릭터 주변에 사각형 테두리 그리기
-        # left = player.x - 59 // 2 + 16
-        # bottom = player.y - 66 // 2
-        # right = player.x + 59 // 2 + 2
-        # top = player.y + 70 // 2
-        # draw_rectangle(left, bottom, right, top)`
-
-
 class StateMachine:
     def __init__(self, player):
         self.player = player
         self.cur_state = Idle
         self.prone = False
         self.transition = {
-            Idle: {right_down: Walk, left_down: Walk, right_up: Walk, left_up: Walk, down_down: Prone, down_up: Idle, alt_down: Jump},
+            Idle: {right_down: Walk, left_down: Walk, right_up: Walk, left_up: Walk, down_down: Prone, down_up: Idle},
             Walk: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle},
-            Prone: {down_down: Prone, down_up: Idle, right_down: Walk, left_down: Walk, right_up: Idle, left_up: Idle},
-            Jump: {}
+            Prone: {down_down: Prone, down_up: Idle, right_down: Walk, left_down: Walk, right_up: Idle, left_up: Idle}
         }
 
     def start(self):
@@ -232,7 +193,9 @@ class StateMachine:
     def draw(self):
         self.cur_state.draw(self.player)
 
-    def handle_event(self, e):  # e : state_events
+    def handle_event(self, e):
+        if e[1].key == SDLK_LALT or e[1].key == SDLK_DOWN and self.player.air:
+            return
         for check_event, next_state in self.transition[self.cur_state].items():
             if check_event(e):
                 self.cur_state.exit(self.player, e)
@@ -253,31 +216,58 @@ class Player:
         self.dir = -1
         self.air = False
         self.jumping = False
-        self.gravity = -0.25             # 중력 가속도, 하강 시 속도가 점차 증가
+        self.gravity = -0.35            # 중력 가속도, 하강 시 속도가 점차 증가
         self.velocity = 0               # 현재 속도
-        self.max_jump_velocity = 7    # 점프 시 초기 속도
-        self.Jump_count = 0
+        self.max_jump_velocity = 7.3    # 점프 시 초기 속도
+        self.alt_key_pressed = False
+
+    def jump(self):
+        if not self.jumping and not self.air:
+            self.jumping = True
+            self.velocity = self.max_jump_velocity
 
     def update(self):
-        if self.y > 82:
-            self.air = True
-        else:
-            self.air = False
-            self.y = 82
-            self.velocity = 0
+        if not self.air and self.alt_key_pressed and not self.jumping:
+            self.jump()
 
-        if not self.jumping:
-            if self.air:
-                self.velocity += self.gravity
-                self.y += self.velocity
-                if self.y <= 82:
-                    self.y = 82
-                    self.velocity = 0
-                    self.air = False
+        if self.jumping:
+            self.y += self.velocity
+            self.velocity += self.gravity
+            if self.y <= 82:
+                self.y = 82
+                self.velocity = 0
+                self.jumping = False
+                self.air = False
+
+        Gravity(self)
         self.state_machine.update()
 
     def handle_event(self, event):
-        self.state_machine.handle_event(('INPUT', event))
+        if event.type == SDL_KEYDOWN and event.key == SDLK_LALT:
+            self.alt_key_pressed = True
+            self.jump()
+        elif event.type == SDL_KEYUP and event.key == SDLK_LALT:
+            self.alt_key_pressed = False
+        else:
+            self.state_machine.handle_event(('INPUT', event))
 
     def draw(self):
         self.state_machine.draw()
+
+
+def Gravity(obj):
+    if obj.y > 82:
+        obj.air = True
+    else:
+        obj.air = False
+        obj.y = 82
+        obj.velocity = 0
+
+    if not obj.jumping:
+        if obj.air:
+            obj.velocity += obj.gravity
+            obj.y += obj.velocity
+            if obj.y <= 82:
+                obj.y = 82
+                obj.velocity = 0
+                obj.air = False
