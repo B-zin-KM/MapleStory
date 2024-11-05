@@ -48,7 +48,7 @@ def render_world():
 
 
 def print_location(obj):
-    player_coordinates = f"playerX: {int(obj.x)}, playerY: {int(obj.y)}"
+    player_coordinates = f"player   x: {int(obj.x)}, y: {int(obj.y)}"
     sys.stdout.write("\r" + player_coordinates)
     sys.stdout.flush()
 
