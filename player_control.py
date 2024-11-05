@@ -1,3 +1,4 @@
+import sys
 from pico2d import *
 from background import Back
 from player import Player
@@ -41,11 +42,15 @@ def update_world():
 def render_world():
     clear_canvas()
     for o in world:
-        print(player.state_machine.cur_state)
-        print(player.air)
-        print(player.x, player.y)
+        print_location(player)
         o.draw()
     update_canvas()
+
+
+def print_location(obj):
+    player_coordinates = f"playerX: {int(obj.x)}, playerY: {int(obj.y)}"
+    sys.stdout.write("\r" + player_coordinates)
+    sys.stdout.flush()
 
 
 open_canvas()
