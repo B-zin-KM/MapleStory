@@ -1,7 +1,9 @@
-import sys
 from pico2d import *
 from background import Back
 from player import Player
+from bounding_box import Box
+
+import game_world
 
 
 def handle_events():
@@ -15,40 +17,39 @@ def handle_events():
             running = False
         else:
             player.handle_event(event)
-            pass
 
 
 def reset_world():
     global running
     global background
-    global world
     global player
+    global box
 
     running = True
-    world = []
 
     background = Back()
-    world.append(background)
+    game_world.add_object(background, 0)
 
     player = Player()
-    world.append(player)
+    game_world.add_object(player, 1)
+
+    box = Box(player)
+    game_world.add_object(box, 2)
 
 
 def update_world():
-    for o in world:
-        o.update()
+    game_world.update()
 
 
 def render_world():
     clear_canvas()
-    for o in world:
-        print_location(player)
-        o.draw()
+    game_world.render()
+    print_location(player)
     update_canvas()
 
 
 def print_location(obj):
-    player_coordinates = f"player   x: {int(obj.x)}, y: {int(obj.y)}"
+    player_coordinates = f"player   state: {str(obj.state_machine.cur_state)}, x: {int(obj.x)}, y: {int(obj.y)}"
     sys.stdout.write("\r" + player_coordinates)
     sys.stdout.flush()
 
@@ -56,11 +57,13 @@ def print_location(obj):
 open_canvas()
 reset_world()
 
+
 while running:
     handle_events()
     update_world()
     render_world()
 
     delay(0.01)
+
 
 close_canvas()
