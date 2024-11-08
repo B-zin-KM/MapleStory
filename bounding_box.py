@@ -1,4 +1,4 @@
-from pico2d import draw_rectangle  # 필요한 모듈만 임포트
+from pico2d import draw_rectangle, SDLK_F1
 import game_world
 
 
@@ -8,9 +8,11 @@ class Box:
         self.x = player.x
         self.y = player.y
         self.left, self.bottom, self.right, self.top = 0, 0, 0, 0
+        self.box_on = True
 
     def draw(self):
-        draw_rectangle(self.left, self.bottom, self.right, self.top)
+        if self.box_on:
+            draw_rectangle(self.left, self.bottom, self.right, self.top)
 
     def update(self):
         if self.player.air:

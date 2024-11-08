@@ -8,6 +8,7 @@ import game_world
 
 def handle_events():
     global running
+    global box
 
     events = get_events()
     for event in events:
@@ -15,6 +16,8 @@ def handle_events():
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_F1:
+             box.box_on = not box.box_on
         else:
             player.handle_event(event)
 
