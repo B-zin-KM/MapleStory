@@ -28,15 +28,15 @@ class Box:
                 self.top = self.player.y + 70 // 2
         elif not self.player.air:
             if self.player.action == 7:
-                self.left = self.player.x - 78 // 2 + 26
+                self.left = self.player.x - 78 // 2 + 40
                 self.bottom = self.player.y - 39 // 2 - 14
                 self.right = self.player.x + 78 // 2 + 18
-                self.top = self.player.y + 39 // 2 - 12
+                self.top = self.player.y + 39 // 2 - 14
             elif self.player.action == 8:
                 self.left = self.player.x - 78 // 2
                 self.bottom = self.player.y - 39 // 2 - 14
-                self.right = self.player.x + 78 // 2 - 8
-                self.top = self.player.y + 39 // 2 - 12
+                self.right = self.player.x + 78 // 2 - 21
+                self.top = self.player.y + 39 // 2 - 14
             else:
                 if self.player.dir == -1:
                     self.left = self.player.x - 59 // 2 + 26
