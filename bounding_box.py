@@ -42,9 +42,9 @@ class Box:
                     self.left = self.player.x - 59 // 2 + 26
                     self.bottom = self.player.y - 66 // 2
                     self.right = self.player.x + 59 // 2 - 11
-                    self.top = self.player.y + 70 // 2
+                    self.top = self.player.y + 70 // 2 - 2
                 else:
                     self.left = self.player.x - 59 // 2 + 30
                     self.bottom = self.player.y - 66 // 2
                     self.right = self.player.x + 59 // 2 - 7
-                    self.top = self.player.y + 70 // 2
+                    self.top = self.player.y + 70 // 2 - 2
