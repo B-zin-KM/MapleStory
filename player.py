@@ -231,7 +231,7 @@ class Player:
             self.velocity = self.max_jump_velocity
 
     def update(self):
-        if not (self.right_key_pressed or self.left_key_pressed or self.down_key_pressed or self.alt_key_pressed):
+        if self.state_machine.cur_state != Idle and not (self.right_key_pressed or self.left_key_pressed or self.down_key_pressed or self.alt_key_pressed):
             self.state_machine.cur_state = Idle
             self.state_machine.cur_state.enter(self, None)
 

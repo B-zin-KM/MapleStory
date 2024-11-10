@@ -16,10 +16,16 @@ class Box:
 
     def update(self):
         if self.player.air:
-            self.left = self.player.x - 59 // 2 + 16
-            self.bottom = self.player.y - 66 // 2
-            self.right = self.player.x + 59 // 2 + 2
-            self.top = self.player.y + 70 // 2
+            if self.player.dir == -1:
+                self.left = self.player.x - 59 // 2 + 20
+                self.bottom = self.player.y - 66 // 2 + 1
+                self.right = self.player.x + 59 // 2 - 2
+                self.top = self.player.y + 70 // 2
+            else:
+                self.left = self.player.x - 59 // 2 + 21
+                self.bottom = self.player.y - 66 // 2 + 1
+                self.right = self.player.x + 59 // 2 - 1
+                self.top = self.player.y + 70 // 2
         elif not self.player.air:
             if self.player.action == 7:
                 self.left = self.player.x - 78 // 2 + 26
@@ -32,7 +38,13 @@ class Box:
                 self.right = self.player.x + 78 // 2 - 8
                 self.top = self.player.y + 39 // 2 - 12
             else:
-                self.left = self.player.x - 59 // 2 + 16
-                self.bottom = self.player.y - 66 // 2
-                self.right = self.player.x + 59 // 2 + 2
-                self.top = self.player.y + 70 // 2
+                if self.player.dir == -1:
+                    self.left = self.player.x - 59 // 2 + 26
+                    self.bottom = self.player.y - 66 // 2
+                    self.right = self.player.x + 59 // 2 - 11
+                    self.top = self.player.y + 70 // 2
+                else:
+                    self.left = self.player.x - 59 // 2 + 30
+                    self.bottom = self.player.y - 66 // 2
+                    self.right = self.player.x + 59 // 2 - 7
+                    self.top = self.player.y + 70 // 2
