@@ -348,7 +348,7 @@ class StateMachine:
 
 class Player:
     def __init__(self):
-        self.x, self.y = 400, 250
+        self.x, self.y = 600, 500
         self.char = 0
         self.frame = 0
         self.action = 4
@@ -384,8 +384,8 @@ class Player:
         if self.jumping:
             self.y += self.velocity
             self.velocity += self.gravity
-            if self.y <= 82:
-                self.y = 82
+            if self.y <= 135:
+                self.y = 135
                 self.velocity = 0
                 self.jumping = False
                 self.air = False
@@ -433,18 +433,18 @@ class Player:
 
 
 def Gravity(obj):
-    if obj.y > 82:
+    if obj.y > 135:
         obj.air = True
     else:
         obj.air = False
-        obj.y = 82
+        obj.y = 135
         obj.velocity = 0
 
     if not obj.jumping:
         if obj.air:
             obj.velocity += obj.gravity
             obj.y += obj.velocity
-            if obj.y <= 82:
-                obj.y = 82
+            if obj.y <= 135:
+                obj.y = 135
                 obj.velocity = 0
                 obj.air = False

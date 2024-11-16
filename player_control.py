@@ -57,7 +57,7 @@ def print_location(obj):
     sys.stdout.flush()
 
 
-open_canvas()
+open_canvas(800, 600)
 reset_world()
 
 
