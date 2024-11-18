@@ -350,7 +350,7 @@ class StateMachine:
 
 class Player:
     def __init__(self):
-        self.x, self.y = 600, 500
+        self.x, self.y = 640, 500
         self.char = 0
         self.frame = 0
         self.action = 4
@@ -358,7 +358,7 @@ class Player:
         self.state_machine = StateMachine(self)
         self.state_machine.start()
         self.dir = -1
-        self.air = False
+        self.air = True
         self.jumping = False
         self.attack = False
         self.gravity = -0.35            # 중력 가속도, 하강 시 속도가 점차 증가
@@ -373,6 +373,7 @@ class Player:
     def jump(self):
         if not self.jumping and not self.air:
             self.jumping = True
+            self.air = True
             self.velocity = self.max_jump_velocity
 
     def update(self):
@@ -380,6 +381,7 @@ class Player:
         global platform
         box = Box(self)
         platform = coordinates[0]
+
         if self.state_machine.cur_state != Idle and self.state_machine.cur_state != Attack and not (self.right_key_pressed or self.left_key_pressed or self.down_key_pressed or self.alt_key_pressed or self.ctrl_key_pressed):
             self.state_machine.cur_state = Idle
             self.state_machine.cur_state.enter(self, None)
@@ -390,14 +392,12 @@ class Player:
         if self.jumping:
             self.y += self.velocity
             self.velocity += self.gravity
-            if self.y - 33 <= platform[3]:
-                self.y = platform[3] + 33
-                self.velocity = 0
+            if self.velocity <= 0:
                 self.jumping = False
-                self.air = False
-                if self.down_key_pressed:
-                    self.state_machine.cur_state = Prone
-                    self.state_machine.cur_state.enter(self, None)
+                self.air = True
+            if self.down_key_pressed:
+                self.state_machine.cur_state = Prone
+                self.state_machine.cur_state.enter(self, None)
 
         self.Gravity()
         self.state_machine.update()
@@ -438,18 +438,6 @@ class Player:
         self.state_machine.draw()
 
     def Gravity(self):
-        if self.y - 33 > platform[3]:
-            self.air = True
-        else:
-            self.air = False
-            self.y = platform[3] + 33
-            self.velocity = 0
-
         if not self.jumping:
-            if self.air:
-                self.velocity += self.gravity
-                self.y += self.velocity
-                if self.y - 33 <= platform[3]:
-                    self.y = platform[3] + 33
-                    self.velocity = 0
-                    self.air = False
+            self.velocity += self.gravity
+            self.y += self.velocity

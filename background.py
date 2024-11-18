@@ -2,6 +2,8 @@ from pico2d import load_image, draw_rectangle
 
 
 class Back:
+    line_on = False
+
     def __init__(self):
         self.image = load_image('전사의 성전.png')
 
@@ -14,7 +16,13 @@ class Back:
 
 coordinates = [
     (20, 102, 780, 102),
-    (610, 177, 685, 177)
+    (610, 177, 685, 177),
+    (590, 155, 670, 155),
+    (570, 134, 670, 134),
+    (145, 150, 210, 150),
+    (120, 175, 190, 175),
+    (90, 205, 175, 205),
+    (70, 283, 155, 283)
 ]
 
 class Platform:
@@ -28,8 +36,16 @@ class Platform:
         pass
 
     def draw(self):
-        draw_rectangle(self.left, self.bottom, self.right, self.top)
+        if Back.line_on:
+            draw_rectangle(self.left, self.bottom, self.right, self.top)
         pass
 
     def update(self):
+        pass
+
+    def get_bb(self):
+        return self.left, self.bottom, self.right, self.top
+        pass
+
+    def handle_collision(self, group, other):
         pass

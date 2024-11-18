@@ -8,7 +8,7 @@ class Box:
         self.x = player.x
         self.y = player.y
         self.left, self.bottom, self.right, self.top = 0, 0, 0, 0
-        self.box_on = True
+        self.box_on = False
 
     def draw(self):
         if self.box_on:
@@ -48,3 +48,16 @@ class Box:
                     self.bottom = self.player.y - 66 // 2
                     self.right = self.player.x + 59 // 2 - 7
                     self.top = self.player.y + 70 // 2 - 2
+
+    def get_bb(self):
+        return self.left, self.bottom + self.player.velocity, self.right, self.bottom + 1
+        pass
+
+    def handle_collision(self, group, other):
+        if group == 'player:platform':
+            self.player.air = False
+            self.player.velocity = 0
+            _, _, _, top = other.get_bb()
+            self.player.y = top + 33
+            pass
+        pass

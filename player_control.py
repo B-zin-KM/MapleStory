@@ -1,3 +1,5 @@
+from sys import platform
+
 from pico2d import *
 from background import Back, Platform
 from player import Player
@@ -18,6 +20,7 @@ def handle_events():
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_F1:
              box.box_on = not box.box_on
+             Back.line_on = not Back.line_on
         else:
             player.handle_event(event)
 
@@ -40,8 +43,12 @@ def reset_world():
     box = Box(player)
     game_world.add_object(box, 2)
 
-    platforms = [Platform() for _ in range(2)]
+    platforms = [Platform() for _ in range(8)]
     game_world.add_objects(platforms, 2)
+
+    game_world.add_collision_pair('player:platform', box, None)
+    for platform in platforms:
+        game_world.add_collision_pair('player:platform', None, platform)
 
 
 def update_world():
