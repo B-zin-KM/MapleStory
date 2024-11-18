@@ -1,5 +1,5 @@
 from pico2d import *
-from background import Back
+from background import Back, Platform
 from player import Player
 from bounding_box import Box
 
@@ -27,6 +27,7 @@ def reset_world():
     global background
     global player
     global box
+    global platforms
 
     running = True
 
@@ -38,6 +39,9 @@ def reset_world():
 
     box = Box(player)
     game_world.add_object(box, 2)
+
+    platforms = [Platform() for _ in range(2)]
+    game_world.add_objects(platforms, 2)
 
 
 def update_world():

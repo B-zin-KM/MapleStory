@@ -1,5 +1,7 @@
 from pico2d import load_image, SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT, SDLK_LALT, SDLK_LCTRL, SDLK_a, SDL_KEYUP, SDLK_DOWN, get_time, draw_rectangle
 import math
+from bounding_box import Box
+from background import coordinates
 
 
 def right_down(e):
@@ -374,6 +376,10 @@ class Player:
             self.velocity = self.max_jump_velocity
 
     def update(self):
+        global box
+        global platform
+        box = Box(self)
+        platform = coordinates[0]
         if self.state_machine.cur_state != Idle and self.state_machine.cur_state != Attack and not (self.right_key_pressed or self.left_key_pressed or self.down_key_pressed or self.alt_key_pressed or self.ctrl_key_pressed):
             self.state_machine.cur_state = Idle
             self.state_machine.cur_state.enter(self, None)
@@ -384,8 +390,8 @@ class Player:
         if self.jumping:
             self.y += self.velocity
             self.velocity += self.gravity
-            if self.y <= 135:
-                self.y = 135
+            if self.y - 33 <= platform[3]:
+                self.y = platform[3] + 33
                 self.velocity = 0
                 self.jumping = False
                 self.air = False
@@ -393,7 +399,7 @@ class Player:
                     self.state_machine.cur_state = Prone
                     self.state_machine.cur_state.enter(self, None)
 
-        Gravity(self)
+        self.Gravity()
         self.state_machine.update()
 
     def handle_event(self, event):
@@ -431,20 +437,19 @@ class Player:
     def draw(self):
         self.state_machine.draw()
 
+    def Gravity(self):
+        if self.y - 33 > platform[3]:
+            self.air = True
+        else:
+            self.air = False
+            self.y = platform[3] + 33
+            self.velocity = 0
 
-def Gravity(obj):
-    if obj.y > 135:
-        obj.air = True
-    else:
-        obj.air = False
-        obj.y = 135
-        obj.velocity = 0
-
-    if not obj.jumping:
-        if obj.air:
-            obj.velocity += obj.gravity
-            obj.y += obj.velocity
-            if obj.y <= 135:
-                obj.y = 135
-                obj.velocity = 0
-                obj.air = False
+        if not self.jumping:
+            if self.air:
+                self.velocity += self.gravity
+                self.y += self.velocity
+                if self.y - 33 <= platform[3]:
+                    self.y = platform[3] + 33
+                    self.velocity = 0
+                    self.air = False
