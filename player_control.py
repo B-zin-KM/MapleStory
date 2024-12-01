@@ -4,6 +4,7 @@ from pico2d import *
 from background import Back, Platform
 from player import Player
 from bounding_box import Box
+from npc import NPC
 
 import game_world
 
@@ -11,6 +12,7 @@ import game_world
 def handle_events():
     global running
     global box
+    global npc
 
     events = get_events()
     for event in events:
@@ -20,6 +22,7 @@ def handle_events():
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_F1:
              box.box_on = not box.box_on
+             npc.box_on = not npc.box_on
              Back.line_on = not Back.line_on
         else:
             player.handle_event(event)
@@ -31,6 +34,7 @@ def reset_world():
     global player
     global box
     global platforms
+    global npc
 
     running = True
 
@@ -46,9 +50,13 @@ def reset_world():
     platforms = [Platform() for _ in range(8)]
     game_world.add_objects(platforms, 2)
 
+    npc = NPC()
+    game_world.add_object(npc, 2)
+
     game_world.add_collision_pair('player:platform', box, None)
     for platform in platforms:
         game_world.add_collision_pair('player:platform', None, platform)
+    # game_world.add_collision_pair('mouse:npc', box, npc)
 
 
 def update_world():

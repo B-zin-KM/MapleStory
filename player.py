@@ -1,4 +1,4 @@
-from pico2d import load_image, SDL_KEYDOWN, SDLK_RIGHT, SDLK_LEFT, SDLK_LALT, SDLK_LCTRL, SDLK_a, SDL_KEYUP, SDLK_DOWN, get_time, draw_rectangle
+from pico2d import load_image, SDLK_UP, SDLK_DOWN, SDLK_RIGHT, SDLK_LEFT, SDLK_LALT, SDLK_LCTRL, SDLK_a, SDLK_SPACE, SDL_KEYUP, SDL_KEYDOWN, get_time, draw_rectangle
 import math
 from bounding_box import Box
 from background import coordinates
@@ -22,6 +22,12 @@ def down_down(e):
 def down_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
+def up_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_UP
+
+def up_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_UP
+
 def alt_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LALT
 
@@ -36,6 +42,12 @@ def ctrl_up(e):
 
 def a_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
+
+def space_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
+def space_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_SPACE
 
 
 class Idle:
@@ -367,8 +379,10 @@ class Player:
         self.right_key_pressed = False
         self.left_key_pressed = False
         self.down_key_pressed = False
+        self.up_key_pressed = False
         self.alt_key_pressed = False
         self.ctrl_key_pressed = False
+        self.space_key_pressed = False
 
     def jump(self):
         if not self.jumping and not self.air:
@@ -409,12 +423,16 @@ class Player:
                 self.jump()
             elif event.key == SDLK_DOWN:
                 self.down_key_pressed = True
+            elif event.key == SDLK_UP:
+                self.up_key_pressed = True
             elif event.key == SDLK_RIGHT:
                 self.right_key_pressed = True
             elif event.key == SDLK_LEFT:
                 self.left_key_pressed = True
             elif event.key == SDLK_LCTRL:
                 self.ctrl_key_pressed = True
+            elif event.key == SDLK_SPACE:
+                self.space_key_pressed = True
             elif event.key == SDLK_a:
                 self.image = load_image('warrior_1.png')
                 self.char = 1
@@ -425,12 +443,16 @@ class Player:
                 self.alt_key_pressed = False
             elif event.key == SDLK_DOWN:
                 self.down_key_pressed = False
+            elif event.key == SDLK_UP:
+                self.up_key_pressed = False
             elif event.key == SDLK_RIGHT:
                 self.right_key_pressed = False
             elif event.key == SDLK_LEFT:
                 self.left_key_pressed = False
             elif event.key == SDLK_LCTRL:
                 self.ctrl_key_pressed = False
+            elif event.key == SDLK_SPACE:
+                self.space_key_pressed = False
 
         self.state_machine.handle_event(('INPUT', event))
 

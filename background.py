@@ -27,6 +27,7 @@ coordinates = [
 
 class Platform:
     instance_count = 0
+
     def __init__(self):
         if Platform.instance_count < len(coordinates):
             self.left, self.bottom, self.right, self.top = coordinates[Platform.instance_count]
@@ -45,7 +46,6 @@ class Platform:
 
     def get_bb(self):
         return self.left, self.bottom, self.right, self.top
-        pass
 
     def handle_collision(self, group, other):
         pass
