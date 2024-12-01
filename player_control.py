@@ -9,8 +9,32 @@ from npc import NPC
 import game_world
 
 
+class Mouse:
+    def __init__(self):
+        self.x, self.y = 0, 0
+        self.box_on = False
+
+    def update(self):
+        pass
+
+    def handle_event(self, event):
+        if event.type in (SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP):
+            self.x, self.y = event.x, get_canvas_height() - event.y
+
+    def get_bb(self):
+        return self.x - 3, self.y - 3, self.x + 3, self.y + 3
+
+    def draw(self):
+        if self.box_on:
+            draw_rectangle(*self.get_bb())
+
+    def handle_collision(self, group, other):
+        pass
+
+
 def handle_events():
     global running
+    global mouse
     global box
     global npc
 
@@ -18,9 +42,16 @@ def handle_events():
     for event in events:
         if event.type == SDL_QUIT:
             running = False
+        elif event.type == SDL_MOUSEMOTION:
+            mouse.handle_event(event)
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+            mouse.handle_event(event)
+            if game_world.collide(mouse, npc):
+                print('NPC 클릭됨')
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_F1:
+             mouse.box_on = not mouse.box_on
              box.box_on = not box.box_on
              npc.box_on = not npc.box_on
              Back.line_on = not Back.line_on
@@ -30,6 +61,7 @@ def handle_events():
 
 def reset_world():
     global running
+    global mouse
     global background
     global player
     global box
@@ -53,10 +85,12 @@ def reset_world():
     npc = NPC()
     game_world.add_object(npc, 2)
 
+    mouse = Mouse()
+    game_world.add_object(mouse, 2)
+
     game_world.add_collision_pair('player:platform', box, None)
     for platform in platforms:
         game_world.add_collision_pair('player:platform', None, platform)
-    # game_world.add_collision_pair('mouse:npc', box, npc)
 
 
 def update_world():

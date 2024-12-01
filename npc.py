@@ -5,7 +5,7 @@ import game_world
 
 class NPC:
     def __init__(self):
-        self.left, self.bottom, self.right, self.top = 76, 283, 120, 350
+        self.left, self.bottom, self.right, self.top = 80, 283, 110, 345
         self.box_on = False
 
     def draw(self):
@@ -16,10 +16,8 @@ class NPC:
         pass
 
     def get_bb(self):
-        return self.left, self.bottom, self.right, self.bottom
+        return self.left, self.bottom, self.right, self.top
         pass
 
     def handle_collision(self, group, other):
-        if group == 'mouse:npc':
-            print('asd')
         pass
