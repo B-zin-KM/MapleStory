@@ -5,7 +5,7 @@ import game_world
 
 class NPC:
     def __init__(self):
-        self.left, self.bottom, self.right, self.top = 80, 283, 110, 345
+        self.left, self.bottom, self.right, self.top = 320, 383, 350, 445
         self.box_on = False
 
     def draw(self):

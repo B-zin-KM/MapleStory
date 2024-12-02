@@ -362,7 +362,7 @@ class StateMachine:
 
 class Player:
     def __init__(self):
-        self.x, self.y = 640, 500
+        self.x, self.y = 880, 600
         self.char = 0
         self.frame = 0
         self.action = 4

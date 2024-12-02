@@ -1,6 +1,7 @@
-world = [[], [], []] # world[0]: background 객체들
-                     # world[1]: foreground 객체들
-                     # world[2]: boundingbox
+world = [[], [], [], []] # world[0]: background
+                         # world[1]: player
+                         # world[2]: UI
+                         # world[3]: boundingbox
 collision_pairs = {}
 
 

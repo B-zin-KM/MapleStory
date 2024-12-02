@@ -5,6 +5,7 @@ from background import Back, Platform
 from player import Player
 from bounding_box import Box
 from npc import NPC
+from talk_box import TalkBox
 
 import game_world
 
@@ -37,6 +38,7 @@ def handle_events():
     global mouse
     global box
     global npc
+    global talkbox
 
     events = get_events()
     for event in events:
@@ -47,13 +49,21 @@ def handle_events():
         elif event.type == SDL_MOUSEBUTTONDOWN:
             mouse.handle_event(event)
             if game_world.collide(mouse, npc):
-                print('NPC 클릭됨')
+                talkbox.count = 1
+            if game_world.collide(mouse, talkbox):
+                if talkbox.count == 1:
+                    print('전직')
+                    talkbox.count = 0
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
+            if talkbox.count == 1:
+                talkbox.count = 0
+            else:
+                running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_F1:
              mouse.box_on = not mouse.box_on
              box.box_on = not box.box_on
              npc.box_on = not npc.box_on
+             talkbox.box_on = not talkbox.box_on
              Back.line_on = not Back.line_on
         else:
             player.handle_event(event)
@@ -67,6 +77,7 @@ def reset_world():
     global box
     global platforms
     global npc
+    global talkbox
 
     running = True
 
@@ -76,17 +87,20 @@ def reset_world():
     player = Player()
     game_world.add_object(player, 1)
 
+    talkbox = TalkBox()
+    game_world.add_object(talkbox, 2)
+
     box = Box(player)
-    game_world.add_object(box, 2)
+    game_world.add_object(box, 3)
 
     platforms = [Platform() for _ in range(8)]
-    game_world.add_objects(platforms, 2)
+    game_world.add_objects(platforms, 3)
 
     npc = NPC()
-    game_world.add_object(npc, 2)
+    game_world.add_object(npc, 3)
 
     mouse = Mouse()
-    game_world.add_object(mouse, 2)
+    game_world.add_object(mouse, 3)
 
     game_world.add_collision_pair('player:platform', box, None)
     for platform in platforms:
@@ -110,7 +124,7 @@ def print_location(obj):
     sys.stdout.flush()
 
 
-open_canvas(800, 600)
+open_canvas(1280, 800)
 reset_world()
 
 
