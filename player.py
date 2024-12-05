@@ -383,6 +383,8 @@ class Player:
         self.alt_key_pressed = False
         self.ctrl_key_pressed = False
         self.space_key_pressed = False
+        self.level = 1
+        self.job = 0                    # 전사 양수 / 마법사 음수
 
     def jump(self):
         if not self.jumping and not self.air:

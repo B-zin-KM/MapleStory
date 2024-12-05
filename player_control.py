@@ -6,6 +6,7 @@ from player import Player
 from bounding_box import Box
 from npc import NPC
 from talk_box import TalkBox
+from ui import UI
 
 import game_world
 
@@ -39,6 +40,7 @@ def handle_events():
     global box
     global npc
     global talkbox
+    global ui
 
     events = get_events()
     for event in events:
@@ -52,8 +54,8 @@ def handle_events():
                 talkbox.count = 1
             if game_world.collide(mouse, talkbox):
                 if talkbox.count == 1:
-                    print('전직')
                     talkbox.count = 0
+                    player.job = 1      # 전사 전직
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             if talkbox.count == 1:
                 talkbox.count = 0
@@ -78,6 +80,7 @@ def reset_world():
     global platforms
     global npc
     global talkbox
+    global ui
 
     running = True
 
@@ -98,6 +101,9 @@ def reset_world():
 
     npc = NPC()
     game_world.add_object(npc, 3)
+
+    ui = UI()
+    game_world.add_object(ui, 3)
 
     mouse = Mouse()
     game_world.add_object(mouse, 3)
