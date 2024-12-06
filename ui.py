@@ -10,11 +10,16 @@ class UI:
         self.image3 = load_image('gauge.graduation.png')
         self.left, self.bottom, self.right, self.top = 0, 0, 0, 0
         self.box_on = False
+        self.HPgauge = 0        #min 168
+        self.MPgauge = 0        #min 168
+        self.EXPgauge = 184     #min 184
 
     def draw(self):
-        self.image1.clip_draw(0, 0, 1280, 71, 1280 / 2, 71, 1280, 142)
-        # self.image2.clip_draw(0, 0, 1, 16, 1280 / 2, 60, 1280, 120)
-        self.image3.clip_draw(0, 0, 340, 31, 618, 39, 544, 62)
+        self.image1.clip_draw(0, 0, 1280, 71, 1280 / 2, 55, 1280, 108)
+        self.image2.clip_draw_to_origin(0, 0, 1, 16, int(517 - self.HPgauge), 9, int(self.HPgauge), 21)     #HP
+        self.image2.clip_draw_to_origin(0, 0, 1, 16, int(690 - self.MPgauge), 9, int(self.MPgauge), 21)     #MP
+        self.image2.clip_draw_to_origin(0, 0, 1, 16, int(886 - self.EXPgauge), 9, int(self.EXPgauge), 21)   #EXP
+        self.image3.clip_draw(0, 0, 340, 31, 617, 31, 544, 48)
         if self.box_on:
             draw_rectangle(self.left, self.bottom, self.right, self.top)
 
