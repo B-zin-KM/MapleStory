@@ -439,10 +439,6 @@ class Player:
                 self.ctrl_key_pressed = True
             elif event.key == SDLK_SPACE:
                 self.space_key_pressed = True
-            elif event.key == SDLK_a:
-                self.image = load_image('warrior_1.png')
-                self.char = 1
-                self.frame = 0
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LALT:

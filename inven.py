@@ -15,7 +15,7 @@ class Inven:
     def draw(self):
         if self.inven_on != -1:
             self.image.clip_draw(self.inven_on * 330, 0, 330, 547, 700, 500, 240, 400)
-            if self.sword == 1:
+            if self.inven_on == 0 and self.sword == 1:
                 self.image1.clip_draw(0, 0, 31, 30, 615, 608)
             if self.box_on:
                 draw_rectangle(self.left, self.bottom, self.right, self.top)
