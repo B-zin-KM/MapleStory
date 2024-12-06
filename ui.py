@@ -9,7 +9,7 @@ class UI:
         self.image2 = load_image('gauge.gray.png')
         self.image3 = load_image('gauge.graduation.png')
         self.image4 = load_image('Lv.png')
-        self.left, self.bottom, self.right, self.top = 0, 0, 0, 0
+        self.left, self.bottom, self.right, self.top = 1035, 73, 1185, 89
         self.player = Player()
         self.box_on = False
         self.HPgauge = 0        #min 168

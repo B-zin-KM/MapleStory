@@ -7,6 +7,7 @@ from bounding_box import Box
 from npc import NPC
 from talk_box import TalkBox
 from ui import UI
+from inven import Inven
 
 import game_world
 
@@ -41,6 +42,7 @@ def handle_events():
     global npc
     global talkbox
     global ui
+    global inven
 
     events = get_events()
     for event in events:
@@ -52,6 +54,18 @@ def handle_events():
             mouse.handle_event(event)
             if game_world.collide(mouse, npc):
                 talkbox.count = 1
+            if game_world.collide(mouse, inven):
+                if mouse.x < 632:
+                    inven.inven_on = 0
+                elif mouse.x < 676:
+                    inven.inven_on = 1
+                elif 726 < mouse.x < 770:
+                    inven.inven_on = 2
+                elif 795 < mouse.x and 678 < mouse.y:
+                    inven.inven_on = -1
+            if game_world.collide(mouse, ui):
+                if mouse.x < 1075:
+                    inven.inven_on = 0
             if game_world.collide(mouse, talkbox):
                 if talkbox.count == 1:
                     talkbox.count = 0
@@ -66,6 +80,8 @@ def handle_events():
              box.box_on = not box.box_on
              npc.box_on = not npc.box_on
              talkbox.box_on = not talkbox.box_on
+             ui.box_on = not ui.box_on
+             inven.box_on = not inven.box_on
              Back.line_on = not Back.line_on
         else:
             player.handle_event(event)
@@ -81,6 +97,7 @@ def reset_world():
     global npc
     global talkbox
     global ui
+    global inven
 
     running = True
 
@@ -104,6 +121,9 @@ def reset_world():
 
     ui = UI()
     game_world.add_object(ui, 3)
+
+    inven = Inven()
+    game_world.add_object(inven, 3)
 
     mouse = Mouse()
     game_world.add_object(mouse, 3)

@@ -384,7 +384,7 @@ class Player:
         self.ctrl_key_pressed = False
         self.space_key_pressed = False
         self.level_1 = 1
-        self.level_10 = 2
+        self.level_10 = 0
         self.job = 0                    # 전사 양수 / 마법사 음수
         self.HP = 0
         self.MP = 0
