@@ -55,14 +55,18 @@ def handle_events():
             if game_world.collide(mouse, npc):
                 talkbox.count = 1
             if game_world.collide(mouse, inven):
-                if mouse.x < 632:
+                if mouse.x < 632 and 645 < mouse.y:
                     inven.inven_on = 0
-                elif mouse.x < 676:
+                elif mouse.x < 676 and 645 < mouse.y:
                     inven.inven_on = 1
-                elif 726 < mouse.x < 770:
+                elif 726 < mouse.x < 770 and 645 < mouse.y:
                     inven.inven_on = 2
                 elif 795 < mouse.x and 678 < mouse.y:
                     inven.inven_on = -1
+                elif mouse.x < 635 and mouse.y < 630:
+                    player.image = load_image('warrior_1.png')
+                    player.char = 1
+                    player.frame = 0
             if game_world.collide(mouse, ui):
                 if mouse.x < 1075:
                     inven.inven_on = 0
@@ -70,6 +74,7 @@ def handle_events():
                 if talkbox.count == 1:
                     talkbox.count = 0
                     player.job = 1      # 전사 전직
+                    inven.sword = 1     # 검 획득
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             if talkbox.count == 1:
                 talkbox.count = 0
