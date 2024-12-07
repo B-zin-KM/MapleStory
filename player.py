@@ -67,12 +67,23 @@ class Idle:
         player.frame = 0
         Idle.elapsed_time = 0.0
         Idle.last_time = get_time()
-        if up_down(e):
-            if 865 < player.x < 895 and player.y == 310:
-                if player.loc == 1:
+        if e is not None and up_down(e):
+            if player.loc == 1:
+                if 865 < player.x < 895 and player.y == 310:
                     player.loc = 0
                     player.x = 1855
                     player.y = 343
+            elif player.loc == 0:
+                if 1840 < player.x < 1870 and player.y == 343:
+                    player.loc = 1
+                    player.x = 880
+                    player.y = 310
+                elif 122 < player.x < 152 and player.y == 223:
+                    player.x = 183
+                    player.y = 827
+                elif 1455 < player.x < 1485 and player.y == 950:
+                    player.x = 1490
+                    player.y = 1093
 
 
     @staticmethod

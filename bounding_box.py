@@ -3,6 +3,8 @@ import game_world
 
 
 class Box:
+    scroll_x = 0
+    scroll_y = 0
     def __init__(self, player):
         self.player = player
         self.x = player.x
@@ -54,16 +56,20 @@ class Box:
         pass
 
     def handle_collision(self, group, other):
+
         if self.player.loc == 0:
             if group == 'player:platform0':
                 self.player.air = False
                 self.player.velocity = 0
                 _, _, _, top = other.get_bb()
-                self.player.y = top + 33
+                adjusted_top = top + Box.scroll_y
+                self.player.y = adjusted_top + 33
+
 
         elif self.player.loc == 1:
             if group == 'player:platform1':
                 self.player.air = False
                 self.player.velocity = 0
                 _, _, _, top = other.get_bb()
-                self.player.y = top + 33
+                adjusted_top = top + Box.scroll_y
+                self.player.y = adjusted_top + 33

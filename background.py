@@ -1,6 +1,7 @@
 from pico2d import load_image, draw_rectangle
 from common import coordinates_list
 from player import Player
+from bounding_box import Box
 
 
 class Back:
@@ -35,6 +36,9 @@ class Back:
         self.scroll_y = max(0, min(self.player.y - half_height, self.map_height - self.canvas_height))
         self.player.screen_x = self.player.x - self.scroll_x
         self.player.screen_y = self.player.y - self.scroll_y
+
+        Box.scroll_x = self.scroll_x
+        Box.scroll_y = self.scroll_y
 
     def draw(self):
         if Back.loc == 0:
