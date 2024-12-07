@@ -1,7 +1,7 @@
 from pico2d import load_image, SDLK_UP, SDLK_DOWN, SDLK_RIGHT, SDLK_LEFT, SDLK_LALT, SDLK_LCTRL, SDLK_a, SDLK_SPACE, SDL_KEYUP, SDL_KEYDOWN, get_time, draw_rectangle
 import math
 from bounding_box import Box
-from background import coordinates
+from common import coordinates
 
 
 def right_down(e):
@@ -86,39 +86,39 @@ class Idle:
         if player.char == 0:
             if player.air:
                 if player.dir == 1:
-                    player.image.clip_draw(19, 549, 41, 66, player.x + 10, player.y)
+                    player.image.clip_draw(19, 549, 41, 66, player.screen_x + 10, player.screen_y)
                 elif player.dir == -1:
-                    player.image.clip_draw(19, 653, 41, 66, player.x + 10, player.y)
+                    player.image.clip_draw(19, 653, 41, 66, player.screen_x + 10, player.screen_y)
             else:
                 if player.action == 3:
-                    player.image.clip_draw(player.frame * 59, 338, 59, 66, player.x, player.y)
+                    player.image.clip_draw(player.frame * 59, 338, 59, 66, player.screen_x, player.screen_y)
                 elif player.action == 4:
-                    player.image.clip_draw(player.frame * 59, 444, 59, 66, player.x, player.y)
+                    player.image.clip_draw(player.frame * 59, 444, 59, 66, player.screen_x, player.screen_y)
         if player.char == 1:
             if player.air:
                 if player.dir == 1:
-                    player.image.clip_draw(19, 771, 50, 66, player.x + 5, player.y)
+                    player.image.clip_draw(19, 771, 50, 66, player.screen_x + 5, player.screen_y)
                 elif player.dir == -1:
-                    player.image.clip_draw(19, 875, 50, 66, player.x + 14, player.y)
+                    player.image.clip_draw(19, 875, 50, 66, player.screen_x + 14, player.screen_y)
             else:
                 if player.action == 3:
                     if player.frame == 0:
-                        player.image.clip_draw(203, 560, 46, 66, player.x + 12, player.y)
+                        player.image.clip_draw(203, 560, 46, 66, player.screen_x + 12, player.screen_y)
                     elif player.frame == 1:
-                        player.image.clip_draw(141, 560, 46, 66, player.x + 12, player.y)
+                        player.image.clip_draw(141, 560, 46, 66, player.screen_x + 12, player.screen_y)
                     elif player.frame == 2:
-                        player.image.clip_draw(18, 560, 46, 66, player.x + 12, player.y)
+                        player.image.clip_draw(18, 560, 46, 66, player.screen_x + 12, player.screen_y)
                     elif player.frame == 3:
-                        player.image.clip_draw(79, 560, 46, 66, player.x + 12, player.y)
+                        player.image.clip_draw(79, 560, 46, 66, player.screen_x + 12, player.screen_y)
                 elif player.action == 4:
                     if player.frame == 0:
-                        player.image.clip_draw(203, 666, 46, 66, player.x + 7, player.y)
+                        player.image.clip_draw(203, 666, 46, 66, player.screen_x + 7, player.screen_y)
                     elif player.frame == 1:
-                        player.image.clip_draw(141, 666, 46, 66, player.x + 8, player.y)
+                        player.image.clip_draw(141, 666, 46, 66, player.screen_x + 8, player.screen_y)
                     elif player.frame == 2:
-                        player.image.clip_draw(18, 666, 46, 66, player.x + 9, player.y)
+                        player.image.clip_draw(18, 666, 46, 66, player.screen_x + 9, player.screen_y)
                     elif player.frame == 3:
-                        player.image.clip_draw(79, 666, 46, 66, player.x + 8, player.y)
+                        player.image.clip_draw(79, 666, 46, 66, player.screen_x + 8, player.screen_y)
 
 class Walk:
 
@@ -167,45 +167,45 @@ class Walk:
         if player.char == 0:
             if player.air:
                 if player.dir == 1:
-                    player.image.clip_draw(19, 549, 41, 66, player.x + 10, player.y)
+                    player.image.clip_draw(19, 549, 41, 66, player.screen_x + 10, player.screen_y)
                 elif player.dir == -1:
-                    player.image.clip_draw(19, 653, 41, 66, player.x + 10, player.y)
+                    player.image.clip_draw(19, 653, 41, 66, player.screen_x + 10, player.screen_y)
             else:
                 if player.action == 1:
                     if player.frame % 2 == 0:
-                        player.image.clip_draw(player.frame * 59, 126, 59, 66, player.x, player.y)
+                        player.image.clip_draw(player.frame * 59, 126, 59, 66, player.screen_x, player.screen_y)
                     elif player.frame % 2 == 1:
-                        player.image.clip_draw(player.frame * 59, 126, 59, 66, player.x, player.y - 1)
+                        player.image.clip_draw(player.frame * 59, 126, 59, 66, player.screen_x, player.screen_y - 1)
                 elif player.action == 2:
                     if player.frame % 2 == 0:
-                        player.image.clip_draw(player.frame * 59, 232, 59, 66, player.x, player.y)
+                        player.image.clip_draw(player.frame * 59, 232, 59, 66, player.screen_x, player.screen_y)
                     elif player.frame % 2 == 1:
-                        player.image.clip_draw(player.frame * 59, 232, 59, 66, player.x, player.y - 1)
+                        player.image.clip_draw(player.frame * 59, 232, 59, 66, player.screen_x, player.screen_y - 1)
         if player.char == 1:
             if player.air:
                 if player.dir == 1:
-                    player.image.clip_draw(19, 771, 50, 66, player.x + 5, player.y)
+                    player.image.clip_draw(19, 771, 50, 66, player.screen_x + 5, player.screen_y)
                 elif player.dir == -1:
-                    player.image.clip_draw(19, 875, 50, 66, player.x + 14, player.y)
+                    player.image.clip_draw(19, 875, 50, 66, player.screen_x + 14, player.screen_y)
             else:
                 if player.action == 1:
                     if player.frame == 0:
-                        player.image.clip_draw(80, 347, 50, 68, player.x + 14, player.y)
+                        player.image.clip_draw(80, 347, 50, 68, player.screen_x + 14, player.screen_y)
                     elif player.frame == 1:
-                        player.image.clip_draw(206, 347, 50, 68, player.x + 15, player.y - 1)
+                        player.image.clip_draw(206, 347, 50, 68, player.screen_x + 15, player.screen_y - 1)
                     elif player.frame == 2:
-                        player.image.clip_draw(143, 347, 50, 68, player.x + 14, player.y)
+                        player.image.clip_draw(143, 347, 50, 68, player.screen_x + 14, player.screen_y)
                     elif player.frame == 3:
-                        player.image.clip_draw(19, 347, 50, 68, player.x + 13, player.y - 1)
+                        player.image.clip_draw(19, 347, 50, 68, player.screen_x + 13, player.screen_y - 1)
                 elif player.action == 2:
                     if player.frame == 0:
-                        player.image.clip_draw(80, 453, 50, 68, player.x + 11, player.y)
+                        player.image.clip_draw(80, 453, 50, 68, player.screen_x + 11, player.screen_y)
                     elif player.frame == 1:
-                        player.image.clip_draw(206, 453, 50, 68, player.x + 4, player.y - 1)
+                        player.image.clip_draw(206, 453, 50, 68, player.screen_x + 4, player.screen_y - 1)
                     elif player.frame == 2:
-                        player.image.clip_draw(143, 453, 50, 68, player.x + 11, player.y)
+                        player.image.clip_draw(143, 453, 50, 68, player.screen_x + 11, player.screen_y)
                     elif player.frame == 3:
-                        player.image.clip_draw(19, 453, 50, 68, player.x + 14, player.y - 1)
+                        player.image.clip_draw(19, 453, 50, 68, player.screen_x + 14, player.screen_y - 1)
 
 class Prone:
 
@@ -230,25 +230,25 @@ class Prone:
         if player.char == 0:
             if player.air:
                 if player.dir == 1:
-                    player.image.clip_draw(19, 549, 41, 66, player.x + 10, player.y)
+                    player.image.clip_draw(19, 549, 41, 66, player.screen_x + 10, player.screen_y)
                 elif player.dir == -1:
-                    player.image.clip_draw(19, 653, 41, 66, player.x + 10, player.y)
+                    player.image.clip_draw(19, 653, 41, 66, player.screen_x + 10, player.screen_y)
             else:
                 if player.action == 7:
-                    player.image.clip_draw(78, 575, 64, 39, player.x + 23, player.y - 15)
+                    player.image.clip_draw(78, 575, 64, 39, player.screen_x + 23, player.screen_y - 15)
                 elif player.action == 8:
-                    player.image.clip_draw(78, 679, 64, 39, player.x - 5, player.y - 15)
+                    player.image.clip_draw(78, 679, 64, 39, player.screen_x - 5, player.screen_y - 15)
         if player.char == 1:
             if player.air:
                 if player.dir == 1:
-                    player.image.clip_draw(19, 771, 50, 66, player.x + 5, player.y)
+                    player.image.clip_draw(19, 771, 50, 66, player.screen_x + 5, player.screen_y)
                 elif player.dir == -1:
-                    player.image.clip_draw(19, 875, 50, 66, player.x + 14, player.y)
+                    player.image.clip_draw(19, 875, 50, 66, player.screen_x + 14, player.screen_y)
             else:
                 if player.action == 7:
-                        player.image.clip_draw(87, 797, 68, 39, player.x + 25, player.y - 15)
+                        player.image.clip_draw(87, 797, 68, 39, player.screen_x + 25, player.screen_y - 15)
                 elif player.action == 8:
-                        player.image.clip_draw(87, 901, 68, 39, player.x - 7, player.y - 15)
+                        player.image.clip_draw(87, 901, 68, 39, player.screen_x - 7, player.screen_y - 15)
 
 class Attack:
 
@@ -297,23 +297,23 @@ class Attack:
     def draw(player):
         if player.action == 9:
             if player.frame == 0:
-                player.image.clip_draw(80, 24, 47, 68, player.x + 15, player.y)
+                player.image.clip_draw(80, 24, 47, 68, player.screen_x + 15, player.screen_y)
             if player.frame == 1:
-                player.image.clip_draw(80, 24, 47, 68, player.x + 15, player.y)
+                player.image.clip_draw(80, 24, 47, 68, player.screen_x + 15, player.screen_y)
             elif player.frame == 2:
-                player.image.clip_draw(19, 26, 42, 66, player.x + 20, player.y - 1)
+                player.image.clip_draw(19, 26, 42, 66, player.screen_x + 20, player.screen_y - 1)
             elif player.frame == 3:
-                player.image.clip_draw(145, 19, 71, 73, player.x + 8, player.y - 8)
+                player.image.clip_draw(145, 19, 71, 73, player.screen_x + 8, player.screen_y - 8)
 
         elif player.action == 10:
             if player.frame == 0:
-                player.image.clip_draw(80, 135, 47, 68, player.x + 4, player.y)
+                player.image.clip_draw(80, 135, 47, 68, player.screen_x + 4, player.screen_y)
             if player.frame == 1:
-                player.image.clip_draw(80, 135, 47, 68, player.x + 4, player.y)
+                player.image.clip_draw(80, 135, 47, 68, player.screen_x + 4, player.screen_y)
             elif player.frame == 2:
-                player.image.clip_draw(19, 137, 42, 66, player.x - 3, player.y - 1)
+                player.image.clip_draw(19, 137, 42, 66, player.screen_x - 3, player.screen_y - 1)
             elif player.frame == 3:
-                player.image.clip_draw(145, 130, 71, 73, player.x + 10, player.y - 8)
+                player.image.clip_draw(145, 130, 71, 73, player.screen_x + 10, player.screen_y - 8)
 
 
 class StateMachine:
@@ -362,7 +362,7 @@ class StateMachine:
 
 class Player:
     def __init__(self):
-        self.x, self.y = 880, 600
+        self.x, self.y = 620, 500
         self.char = 0
         self.frame = 0
         self.action = 4
@@ -383,6 +383,7 @@ class Player:
         self.alt_key_pressed = False
         self.ctrl_key_pressed = False
         self.space_key_pressed = False
+        self.Lv = 1
         self.level_1 = 1
         self.level_10 = 0
         self.job = 0                    # 전사 양수 / 마법사 음수
@@ -439,6 +440,10 @@ class Player:
                 self.ctrl_key_pressed = True
             elif event.key == SDLK_SPACE:
                 self.space_key_pressed = True
+            elif event.key == SDLK_a:   # 레벨업
+                self.Lv += 1
+                self.level_10 = self.Lv // 10
+                self.level_1 = self.Lv % 10
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LALT:

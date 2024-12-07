@@ -8,6 +8,7 @@ from npc import NPC
 from talk_box import TalkBox
 from ui import UI
 from inven import Inven
+from common import coordinates
 
 import game_world
 
@@ -73,8 +74,10 @@ def handle_events():
             if game_world.collide(mouse, talkbox):
                 if talkbox.count == 1:
                     talkbox.count = 0
-                    player.job = 1      # 전사 전직
+                    player.job = 1      # 전사 1차 전직
                     inven.sword = 1     # 검 획득
+                    if player.Lv >= 30:
+                        player.job = 2  # 전사 2차 전직
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             if talkbox.count == 1:
                 talkbox.count = 0
@@ -106,11 +109,12 @@ def reset_world():
 
     running = True
 
-    background = Back()
-    game_world.add_object(background, 0)
-
     player = Player()
     game_world.add_object(player, 1)
+
+    background = Back(player)
+    game_world.add_object(background, 0)
+    background.player = player
 
     talkbox = TalkBox()
     game_world.add_object(talkbox, 2)
@@ -118,7 +122,7 @@ def reset_world():
     box = Box(player)
     game_world.add_object(box, 3)
 
-    platforms = [Platform() for _ in range(8)]
+    platforms = [Platform() for _ in range(len(coordinates))]
     game_world.add_objects(platforms, 3)
 
     npc = NPC()
@@ -126,6 +130,7 @@ def reset_world():
 
     ui = UI()
     game_world.add_object(ui, 3)
+    ui.player = player
 
     inven = Inven()
     game_world.add_object(inven, 3)
