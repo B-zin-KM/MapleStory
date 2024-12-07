@@ -2,6 +2,7 @@ from pico2d import load_image, SDLK_UP, SDLK_DOWN, SDLK_RIGHT, SDLK_LEFT, SDLK_L
 import math
 from bounding_box import Box
 from common import coordinates_list
+from offense import Offense0
 
 import game_world
 
@@ -286,10 +287,14 @@ class Attack:
         Attack.last_time = get_time()
         player.frame = 0
         player.attack = True
+        player.offense()
 
     @staticmethod
     def exit(player, e):
         player.attack = False
+        for offense in player.offenses:
+            game_world.remove_object(offense)
+        player.offenses.clear()
         pass
 
     @staticmethod
@@ -411,6 +416,7 @@ class Player:
         self.HP = 0
         self.MP = 0
         self.EXP = 0
+        self.offenses = []
 
     def jump(self):
         if not self.jumping and not self.air:
@@ -491,3 +497,9 @@ class Player:
         if not self.jumping:
             self.velocity += self.gravity
             self.y += self.velocity
+
+    def offense(self):
+        offense = Offense0(self.x, self.y, self.dir)
+        game_world.add_object(offense, 3)
+        self.offenses.append(offense)
+        # game_world.add_collision_pair('ball:zombie', ball, None)
