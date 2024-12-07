@@ -1,14 +1,12 @@
-from sys import platform
-
 from pico2d import *
-from background import Back, Platform
+from background import Back, Platform0, Platform1
 from player import Player
 from bounding_box import Box
 from npc import NPC
 from talk_box import TalkBox
 from ui import UI
 from inven import Inven
-from common import coordinates
+from common import coordinates_list
 
 import game_world
 
@@ -122,8 +120,11 @@ def reset_world():
     box = Box(player)
     game_world.add_object(box, 3)
 
-    platforms = [Platform() for _ in range(len(coordinates))]
-    game_world.add_objects(platforms, 3)
+    platforms0 = [Platform0(background) for _ in range(len(coordinates_list[0]))]
+    game_world.add_objects(platforms0, 3)
+
+    platforms1 = [Platform1(background) for _ in range(len(coordinates_list[1]))]
+    game_world.add_objects(platforms1, 3)
 
     npc = NPC()
     game_world.add_object(npc, 3)
@@ -138,9 +139,13 @@ def reset_world():
     mouse = Mouse()
     game_world.add_object(mouse, 3)
 
-    game_world.add_collision_pair('player:platform', box, None)
-    for platform in platforms:
-        game_world.add_collision_pair('player:platform', None, platform)
+    game_world.add_collision_pair('player:platform0', box, None)
+    for platform in platforms0:
+        game_world.add_collision_pair('player:platform0', None, platform)
+
+    game_world.add_collision_pair('player:platform1', box, None)
+    for platform in platforms1:
+        game_world.add_collision_pair('player:platform1', None, platform)
 
 
 def update_world():

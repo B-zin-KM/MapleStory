@@ -1,7 +1,9 @@
 from pico2d import load_image, SDLK_UP, SDLK_DOWN, SDLK_RIGHT, SDLK_LEFT, SDLK_LALT, SDLK_LCTRL, SDLK_a, SDLK_SPACE, SDL_KEYUP, SDL_KEYDOWN, get_time, draw_rectangle
 import math
 from bounding_box import Box
-from common import coordinates
+from common import coordinates_list
+
+import game_world
 
 
 def right_down(e):
@@ -65,6 +67,13 @@ class Idle:
         player.frame = 0
         Idle.elapsed_time = 0.0
         Idle.last_time = get_time()
+        if up_down(e):
+            if 865 < player.x < 895 and player.y == 310:
+                if player.loc == 1:
+                    player.loc = 0
+                    player.x = 1855
+                    player.y = 343
+
 
     @staticmethod
     def exit(player, e):
@@ -321,7 +330,7 @@ class StateMachine:
         self.player = player
         self.cur_state = Idle
         self.transition = {
-            Idle: {right_down: Walk, left_down: Walk, right_up: Walk, left_up: Walk, down_down: Prone, down_up: Idle, ctrl_down: Attack},
+            Idle: {right_down: Walk, left_down: Walk, right_up: Walk, left_up: Walk, down_down: Prone, down_up: Idle, up_down: Idle, ctrl_down: Attack},
             Walk: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, ctrl_down: Attack},
             Prone: {down_down: Prone, down_up: Idle, right_down: Walk, left_down: Walk, right_up: Idle, left_up: Idle},
             Attack: {}
@@ -362,7 +371,7 @@ class StateMachine:
 
 class Player:
     def __init__(self):
-        self.x, self.y = 620, 500
+        self.x, self.y = 640, 500
         self.char = 0
         self.frame = 0
         self.action = 4
@@ -386,6 +395,7 @@ class Player:
         self.Lv = 1
         self.level_1 = 1
         self.level_10 = 0
+        self.loc = 1
         self.job = 0                    # 전사 양수 / 마법사 음수
         self.HP = 0
         self.MP = 0
@@ -401,7 +411,7 @@ class Player:
         global box
         global platform
         box = Box(self)
-        platform = coordinates[0]
+        platform = coordinates_list[self.loc][0]
 
         if self.state_machine.cur_state != Idle and self.state_machine.cur_state != Attack and not (self.right_key_pressed or self.left_key_pressed or self.down_key_pressed or self.alt_key_pressed or self.ctrl_key_pressed):
             self.state_machine.cur_state = Idle
