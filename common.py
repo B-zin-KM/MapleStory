@@ -1,3 +1,6 @@
+box_on = False
+map = 1
+
 coordinates_list = []
 
 x_start = 1455

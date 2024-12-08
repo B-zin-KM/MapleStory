@@ -1,7 +1,7 @@
 import random
 import math
 import game_world
-
+import common
 from pico2d import *
 
 
@@ -23,34 +23,40 @@ class Stump:
 
 
     def update(self):
-        current_time = get_time()
-        time_difference = current_time - self.last_time
-        self.last_time = current_time
-        self.elapsed_time += time_difference
+        if common.map == 0:
+            current_time = get_time()
+            time_difference = current_time - self.last_time
+            self.last_time = current_time
+            self.elapsed_time += time_difference
 
-        if self.elapsed_time >= self.idle_time:
-            self.elapsed_time = 0
-            self.frame = (self.frame + 1) % 4
+            if self.elapsed_time >= self.idle_time:
+                self.elapsed_time = 0
+                self.frame = (self.frame + 1) % 4
 
-        if self.x > 1400:
-            self.dir = -1
-        elif self.x < 580:
-            self.dir = 1
-        self.x = clamp(580, self.x, 1400)
+            if self.x > 1400:
+                self.dir = -1
+            elif self.x < 580:
+                self.dir = 1
+            self.x = clamp(580, self.x, 1400)
 
-        self.x += self.dir * 0.7
+            self.x += self.dir * 0.7
 
 
     def draw(self):
-        if self.dir == 1:
-            self.image_R.clip_draw(self.frame * 73, 218, 72, 55, self.x - Stump.scroll_x, self.y - Stump.scroll_y)
-        elif self.dir == -1:
-            self.image_L.clip_draw(self.frame * 72, 218, 72, 55, self.x - Stump.scroll_x, self.y - Stump.scroll_y)
-        draw_rectangle(self.x - 37 - Stump.scroll_x, self.y - 27 - Stump.scroll_y, self.x + 37 - Stump.scroll_x, self.y + 30 - Stump.scroll_y)
+        if common.map == 0:
+            if self.dir == 1:
+                self.image_R.clip_draw(self.frame * 73, 218, 72, 55, self.x - Stump.scroll_x, self.y - Stump.scroll_y)
+            elif self.dir == -1:
+                self.image_L.clip_draw(self.frame * 72, 218, 72, 55, self.x - Stump.scroll_x, self.y - Stump.scroll_y)
+            if common.box_on:
+                draw_rectangle(self.x - 37 - Stump.scroll_x, self.y - 27 - Stump.scroll_y, self.x + 37 - Stump.scroll_x, self.y + 30 - Stump.scroll_y)
 
 
     def get_bb(self):
-        return  self.x - 37, self.y - 27, self.x + 37, self.y + 30
+        if common.map == 1:
+            return 0, 0, 0, 0
+        elif common.map == 0:
+            return  self.x - 37, self.y - 27, self.x + 37, self.y + 30
 
 
     def handle_collision(self, group, other):

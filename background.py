@@ -1,5 +1,6 @@
 from pico2d import load_image, draw_rectangle
 
+import common
 import offense
 from common import coordinates_list
 from player import Player
@@ -9,9 +10,6 @@ from stump import Stump
 
 
 class Back:
-    line_on = False
-    loc = 1
-
     def __init__(self, player):
         self.image0 = load_image('페리온 북쪽령.png')
         self.image1 = load_image('전사의 성전.png')
@@ -25,13 +23,10 @@ class Back:
         self.canvas_height = 800
 
     def update(self):
-        if self.player.loc != Back.loc:
-            Back.loc = self.player.loc
-
-        if Back.loc == 0:
+        if common.map == 0:
             self.map_width = 2073
             self.map_height = 1610
-        elif Back.loc == 1:
+        elif common.map == 1:
             self.map_width = 1280
             self.map_height = 800
         half_width = self.canvas_width // 2
@@ -49,12 +44,12 @@ class Back:
         Stump.scroll_y = self.scroll_y
 
     def draw(self):
-        if Back.loc == 0:
+        if common.map == 0:
             self.image0.clip_draw(
                 int(self.scroll_x), int(self.scroll_y), self.canvas_width, self.canvas_height,
                 self.canvas_width // 2, self.canvas_height // 2
             )
-        elif Back.loc == 1:
+        elif common.map == 1:
             self.image1.clip_draw(
                 int(self.scroll_x), int(self.scroll_y), self.canvas_width, self.canvas_height,
                 self.canvas_width // 2, self.canvas_height // 2
@@ -78,8 +73,8 @@ class Platform0:
 
     def draw(self):
         scroll_x, scroll_y = self.back.get_scroll()
-        if Back.loc == 0:
-            if Back.line_on:
+        if common.map == 0:
+            if common.box_on:
                 draw_rectangle(
                     self.left - scroll_x,
                     self.bottom - scroll_y,
@@ -116,8 +111,8 @@ class Platform1:
 
     def draw(self):
         scroll_x, scroll_y = self.back.get_scroll()
-        if Back.loc == 1:
-            if Back.line_on:
+        if common.map == 1:
+            if common.box_on:
                 draw_rectangle(
                     self.left - scroll_x,
                     self.bottom - scroll_y,

@@ -1,5 +1,6 @@
 from pico2d import draw_rectangle, SDLK_F1
 import game_world
+import common
 
 
 class Box:
@@ -10,10 +11,9 @@ class Box:
         self.x = player.x
         self.y = player.y
         self.left, self.bottom, self.right, self.top = 0, 0, 0, 0
-        self.box_on = False
 
     def draw(self):
-        if self.box_on:
+        if common.box_on:
             draw_rectangle(self.left, self.bottom, self.right, self.top)
 
     def update(self):
@@ -57,7 +57,7 @@ class Box:
 
     def handle_collision(self, group, other):
 
-        if self.player.loc == 0:
+        if common.map == 0:
             if group == 'player:platform0':
                 self.player.air = False
                 self.player.velocity = 0
@@ -66,7 +66,7 @@ class Box:
                 self.player.y = adjusted_top + 33
 
 
-        elif self.player.loc == 1:
+        elif common.map == 1:
             if group == 'player:platform1':
                 self.player.air = False
                 self.player.velocity = 0

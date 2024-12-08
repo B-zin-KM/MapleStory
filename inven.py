@@ -1,6 +1,7 @@
 from pico2d import load_image, draw_rectangle, SDLK_F1
 from player import Player
 import game_world
+import common
 
 
 class Inven:
@@ -17,7 +18,7 @@ class Inven:
             self.image.clip_draw(self.inven_on * 330, 0, 330, 547, 700, 500, 240, 400)
             if self.inven_on == 0 and self.sword == 1:
                 self.image1.clip_draw(0, 0, 31, 30, 615, 608)
-            if self.box_on:
+            if common.box_on:
                 draw_rectangle(self.left, self.bottom, self.right, self.top)
 
     def update(self):

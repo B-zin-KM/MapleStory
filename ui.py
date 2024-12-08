@@ -2,6 +2,7 @@ from pico2d import load_image, draw_rectangle, SDLK_F1
 
 from player import Player
 import game_world
+import common
 
 
 class UI:
@@ -12,7 +13,6 @@ class UI:
         self.image4 = load_image('Lv.png')
         self.left, self.bottom, self.right, self.top = 1035, 73, 1185, 89
         self.player = Player()
-        self.box_on = False
         self.HPgauge = 0        #min 168
         self.MPgauge = 0        #min 168
         self.EXPgauge = 184     #min 184
@@ -28,7 +28,7 @@ class UI:
             self.image4.clip_draw(110, 0, 11, 13, 78, 27, 17, 20)
         else:
             self.image4.clip_draw(11 * self.player.level_10, 0, 11, 13, 78, 27, 17, 20)
-        if self.box_on:
+        if common.box_on:
             draw_rectangle(self.left, self.bottom, self.right, self.top)
 
     def update(self):

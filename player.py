@@ -1,5 +1,7 @@
 from pico2d import load_image, SDLK_UP, SDLK_DOWN, SDLK_RIGHT, SDLK_LEFT, SDLK_LALT, SDLK_LCTRL, SDLK_a, SDLK_SPACE, SDL_KEYUP, SDL_KEYDOWN, get_time, draw_rectangle
 import math
+
+import common
 from bounding_box import Box
 from common import coordinates_list
 from offense import Offense0
@@ -69,14 +71,14 @@ class Idle:
         Idle.elapsed_time = 0.0
         Idle.last_time = get_time()
         if e is not None and up_down(e):
-            if player.loc == 1:
+            if common.map == 1:
                 if 865 < player.x < 895 and player.y == 310:
-                    player.loc = 0
+                    common.map = 0
                     player.x = 1855
                     player.y = 343
-            elif player.loc == 0:
+            elif common.map == 0:
                 if 1840 < player.x < 1870 and player.y == 343:
-                    player.loc = 1
+                    common.map = 1
                     player.x = 880
                     player.y = 310
                 elif 122 < player.x < 152 and player.y == 223:
@@ -412,7 +414,6 @@ class Player:
         self.Lv = 1
         self.level_1 = 1
         self.level_10 = 0
-        self.loc = 1
         self.job = 0                    # 전사 양수 / 마법사 음수
         self.HP = 0
         self.MP = 0
@@ -429,7 +430,7 @@ class Player:
         global box
         global platform
         box = Box(self)
-        platform = coordinates_list[self.loc][0]
+        platform = coordinates_list[common.map][0]
 
         if self.offenses:
             for offense in self.offenses:

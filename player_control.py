@@ -1,4 +1,6 @@
 from pico2d import *
+
+import common
 from background import Back, Platform0, Platform1
 from player import Player
 from bounding_box import Box
@@ -15,7 +17,6 @@ import game_world
 class Mouse:
     def __init__(self):
         self.x, self.y = 0, 0
-        self.box_on = False
 
     def update(self):
         pass
@@ -28,7 +29,7 @@ class Mouse:
         return self.x - 3, self.y - 3, self.x + 3, self.y + 3
 
     def draw(self):
-        if self.box_on:
+        if common.box_on:
             draw_rectangle(*self.get_bb())
 
     def handle_collision(self, group, other):
@@ -43,6 +44,8 @@ def handle_events():
     global talkbox
     global ui
     global inven
+    global offense
+    global stump
 
     events = get_events()
     for event in events:
@@ -83,13 +86,7 @@ def handle_events():
             else:
                 running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_F1:
-             mouse.box_on = not mouse.box_on
-             box.box_on = not box.box_on
-             npc.box_on = not npc.box_on
-             talkbox.box_on = not talkbox.box_on
-             ui.box_on = not ui.box_on
-             inven.box_on = not inven.box_on
-             Back.line_on = not Back.line_on
+             common.box_on = not common.box_on
         else:
             player.handle_event(event)
 
