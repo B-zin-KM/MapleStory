@@ -291,10 +291,15 @@ class Attack:
         Attack.last_time = get_time()
         player.frame = 0
         player.attack = True
+        player.offense()
 
     @staticmethod
     def exit(player, e):
         player.attack = False
+        if player.offenses:
+            for offense in player.offenses:
+                game_world.remove_object(offense)
+            player.offenses.clear()
         pass
 
     @staticmethod
@@ -317,10 +322,6 @@ class Attack:
                         player.state_machine.cur_state.exit(player, None)
                         player.state_machine.cur_state = Idle
                         player.state_machine.cur_state.enter(player, None)
-
-            if player.frame == 3:
-                player.offense()
-
 
 
     @staticmethod
@@ -436,10 +437,6 @@ class Player:
         box = Box(self)
         platform = coordinates_list[common.map][0]
 
-        if self.offenses:
-            for offense in self.offenses:
-                game_world.remove_object(offense)
-            self.offenses.clear()
 
         if self.state_machine.cur_state != Idle and self.state_machine.cur_state != Attack and not (self.right_key_pressed or self.left_key_pressed or self.down_key_pressed or self.alt_key_pressed or self.ctrl_key_pressed):
             self.state_machine.cur_state = Idle
@@ -465,6 +462,7 @@ class Player:
             self.invincible_count += 1
         if self.HP >= 168:
             self.HP = 80
+            self.EXP = 184
             common.map = 1
             self.x, self.y = 640, 500
 
@@ -489,8 +487,12 @@ class Player:
                 self.space_key_pressed = True
             elif event.key == SDLK_a:   # 레벨업
                 self.Lv += 1
+                common.attack_power += 1
                 self.level_10 = self.Lv // 10
                 self.level_1 = self.Lv % 10
+                self.EXP = 184
+                self.HP = 0
+                self.MP = 0
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LALT:
