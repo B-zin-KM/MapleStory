@@ -112,13 +112,14 @@ def reset_world():
     background = Back(player)
     game_world.add_object(background, 0)
     background.player = player
+    game_world.add_collision_pair('player:stump', player, None)
+
 
     talkbox = TalkBox()
     game_world.add_object(talkbox, 2)
 
     box = Box(player)
     game_world.add_object(box, 3)
-    game_world.add_collision_pair('player:stump', box, None)
 
     platforms0 = [Platform0(background) for _ in range(len(coordinates_list[0]))]
     game_world.add_objects(platforms0, 3)

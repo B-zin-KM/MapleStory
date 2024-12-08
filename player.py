@@ -74,6 +74,8 @@ class Idle:
             if common.map == 1:
                 if 865 < player.x < 895 and player.y == 310:
                     common.map = 0
+                    common.scroll_x = 0
+                    common.scroll_y = 0
                     player.x = 1855
                     player.y = 343
             elif common.map == 0:
@@ -499,6 +501,15 @@ class Player:
 
     def draw(self):
         self.state_machine.draw()
+        if common.box_on:
+            draw_rectangle(self.x - common.scroll_x,
+                           self.y - 33 - common.scroll_y,
+                           self.x + 20 - common.scroll_x,
+                           self.y + 33 - common.scroll_y)
+
+    def get_bb(self):
+        return self.x, self.y - 33, self.x + 20, self.y + 33
+        pass
 
     def Gravity(self):
         if not self.jumping:
@@ -510,3 +521,7 @@ class Player:
         game_world.add_object(offense, 3)
         self.offenses.append(offense)
         game_world.add_collision_pair('offense:stump', offense, None)
+
+    def handle_collision(self, group, other):
+        if group == 'player:stump':
+            self.HP += 1
