@@ -7,16 +7,17 @@ from pico2d import *
 
 class Stump:
 
-    def __init__(self):
+    def __init__(self, player):
         self.x, self.y = random.randint(600, 1200), 217
         self.image_R = load_image('스텀프r.png')
         self.image_L = load_image('스텀프l.png')
         self.frame = random.randint(0, 3)
         self.dir = random.choice([-1,1])
-        self.HP = 100
+        self.HP = 30
         self.idle_time = 0.3
         self.elapsed_time = 0.0
         self.last_time = get_time()
+        self.player = player
 
 
     def update(self):
@@ -59,5 +60,19 @@ class Stump:
     def handle_collision(self, group, other):
         if group == 'offense:stump':
             if not hasattr(other, 'handled'):  # 중복 처리 방지
-                game_world.remove_object(self)
-                other.handled = True
+                self.HP -= common.attack_power
+                if self.player.x < self.x:
+                    self.dir = -1
+                    self.x += 15
+                else:
+                    self.dir = 1
+                    self.x -= 15
+                if self.HP <= 0:
+                    game_world.remove_object(self)
+                    other.handled = True
+                    self.player.EXP -= 50 // self.player.Lv
+                    if self.player.EXP <= 0:
+                        self.player.Lv += 1
+                        self.player.level_10 = self.player.Lv // 10
+                        self.player.level_1 = self.player.Lv % 10
+                        self.player.EXP = 184

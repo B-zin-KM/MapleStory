@@ -421,6 +421,8 @@ class Player:
         self.MP = 0
         self.EXP = 184
         self.offenses = []
+        self.invincible = False
+        self.invincible_count = 0
 
     def jump(self):
         if not self.jumping and not self.air:
@@ -457,6 +459,15 @@ class Player:
                 self.state_machine.cur_state.enter(self, None)
 
         self.Gravity()
+        if self.invincible:
+            if self.invincible_count >= 100:
+                self.invincible = False
+            self.invincible_count += 1
+        if self.HP >= 168:
+            self.HP = 80
+            common.map = 1
+            self.x, self.y = 640, 500
+
         self.state_machine.update()
 
     def handle_event(self, event):
@@ -524,4 +535,8 @@ class Player:
 
     def handle_collision(self, group, other):
         if group == 'player:stump':
-            self.HP += 1
+            if not self.invincible:
+                self.HP += 15
+                self.x += -self.dir * 15
+                self.invincible = True
+                self.invincible_count = 0

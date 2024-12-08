@@ -1,5 +1,5 @@
 from pico2d import *
-
+import time
 import common
 from background import Back, Platform0, Platform1
 from player import Player
@@ -13,6 +13,8 @@ from stump import Stump
 
 import game_world
 
+stump_last_spawn_time = time.time()
+stump_spawn_interval = 10
 
 class Mouse:
     def __init__(self):
@@ -137,7 +139,7 @@ def reset_world():
     inven = Inven()
     game_world.add_object(inven, 3)
 
-    stumps = [Stump() for _ in range(10)]
+    stumps = [Stump(player) for _ in range(10)]
     game_world.add_objects(stumps, 1)
     for stump in stumps:
         game_world.add_collision_pair('offense:stump', None, stump)
@@ -154,9 +156,19 @@ def reset_world():
     for platform in platforms1:
         game_world.add_collision_pair('player:platform1', None, platform)
 
+    global stump_last_spawn_time
+    stump_last_spawn_time = time.time()
+
 
 def update_world():
+    global stump_last_spawn_time
     game_world.update()
+
+    current_time = time.time()
+    if current_time - stump_last_spawn_time >= stump_spawn_interval:
+        if game_world.count_object(1) < 10 + 1:
+            spawn_stump()
+            stump_last_spawn_time = current_time
 
 
 def render_world():
@@ -170,6 +182,15 @@ def print_location(obj):
     player_coordinates = f"player   state: {str(obj.state_machine.cur_state)}, x: {int(obj.x)}, y: {int(obj.y)}"
     sys.stdout.write("\r" + player_coordinates)
     sys.stdout.flush()
+
+
+def spawn_stump():
+    global stump
+
+    stump = Stump(player)
+    game_world.add_object(stump, 1)
+    game_world.add_collision_pair('offense:stump', None, stump)
+    game_world.add_collision_pair('player:stump', None, stump)
 
 
 open_canvas(1280, 800)

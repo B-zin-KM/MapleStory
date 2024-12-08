@@ -13,6 +13,8 @@ def add_collision_pair(group, a, b):
     if b:
         collision_pairs[group][1].append(b)
 
+def count_object(depth):
+    return len(world[depth])
 
 def add_object(o, depth):
     world[depth].append(o)

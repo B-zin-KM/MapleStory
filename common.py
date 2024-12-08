@@ -2,6 +2,7 @@ box_on = False
 map = 1
 scroll_x = 0
 scroll_y = 0
+attack_power = 10
 
 coordinates_list = []
 
