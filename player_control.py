@@ -10,6 +10,7 @@ from ui import UI
 from inven import Inven
 from common import coordinates_list
 from stump import Stump
+from stumpy import Stumpy
 from start import Start
 from clear import Clear
 
@@ -123,6 +124,7 @@ def reset_world():
     global ui
     global inven
     global stumps
+    global stumpy
     global start
     global clear
 
@@ -166,6 +168,9 @@ def reset_world():
     for stump in stumps:
         game_world.add_collision_pair('offense:stump', None, stump)
         game_world.add_collision_pair('player:stump', None, stump)
+
+    stumpy = Stumpy(player)
+    game_world.add_object(stumpy, 0)
 
     clear = Clear()
     game_world.add_object(clear, 4)
