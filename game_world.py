@@ -1,7 +1,8 @@
-world = [[], [], [], []] # world[0]: background
+world = [[], [], [], [], []] # world[0]: background
                          # world[1]: player
                          # world[2]: UI
                          # world[3]: boundingbox
+                         # world[4]: start
 collision_pairs = {}
 
 

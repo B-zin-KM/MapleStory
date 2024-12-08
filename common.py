@@ -3,6 +3,7 @@ map = 1
 scroll_x = 0
 scroll_y = 0
 attack_power = 10
+start_on = True
 
 coordinates_list = []
 

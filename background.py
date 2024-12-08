@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_rectangle
+from pico2d import load_image, draw_rectangle, load_music
 
 import common
 import offense
@@ -6,11 +6,14 @@ from common import coordinates_list
 from player import Player
 from bounding_box import Box
 
-
 class Back:
     def __init__(self, player):
         self.image0 = load_image('페리온 북쪽령.png')
         self.image1 = load_image('전사의 성전.png')
+
+        self.bgm = load_music('bgm1.mp3')
+        self.bgm.set_volume(50)
+
         self.player = player
         self.scroll_x = 0
         self.scroll_y = 0

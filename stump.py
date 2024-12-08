@@ -60,6 +60,7 @@ class Stump:
     def handle_collision(self, group, other):
         if group == 'offense:stump':
             if not hasattr(other, 'handled'):  # 중복 처리 방지
+                self.player.StumpDamage_sound.play()
                 self.HP -= common.attack_power
                 if self.player.x < self.x:
                     self.dir = -1
@@ -68,10 +69,13 @@ class Stump:
                     self.dir = 1
                     self.x -= 15
                 if self.HP <= 0:
+                    self.player.StumpDie_sound.play()
                     game_world.remove_object(self)
                     other.handled = True
                     self.player.EXP -= 50 // self.player.Lv
                     if self.player.EXP <= 0:
+                        self.player.LvUp_sound.play()
+                        self.player.JobChanged_sound.play()
                         self.player.Lv += 1
                         if self.player.Lv == 10:
                             common.attack_power += 5

@@ -10,6 +10,7 @@ from ui import UI
 from inven import Inven
 from common import coordinates_list
 from stump import Stump
+from start import Start
 
 import game_world
 
@@ -48,6 +49,8 @@ def handle_events():
     global inven
     global offense
     global stump
+    global start
+    global start_on
 
     events = get_events()
     for event in events:
@@ -61,27 +64,41 @@ def handle_events():
                 talkbox.count = 1
             if game_world.collide(mouse, inven):
                 if mouse.x < 632 and 645 < mouse.y:
+                    player.Click_sound.play()
                     inven.inven_on = 0
                 elif mouse.x < 676 and 645 < mouse.y:
+                    player.Click_sound.play()
                     inven.inven_on = 1
                 elif 726 < mouse.x < 770 and 645 < mouse.y:
+                    player.Click_sound.play()
                     inven.inven_on = 2
                 elif 795 < mouse.x and 678 < mouse.y:
+                    player.Click_sound.play()
                     inven.inven_on = -1
                 elif mouse.x < 635 and mouse.y < 630:
+                    player.DropItem_sound.play()
                     player.image = load_image('warrior_1.png')
                     player.char = 1
                     player.frame = 0
             if game_world.collide(mouse, ui):
                 if mouse.x < 1075:
+                    player.Click_sound.play()
                     inven.inven_on = 0
             if game_world.collide(mouse, talkbox):
                 if talkbox.count == 1:
+                    player.Click_sound.play()
+                    player.JobChanged_sound.play()
                     talkbox.count = 0
                     player.job = 1      # 전사 1차 전직
                     inven.sword = 1     # 검 획득
-                    if player.Lv >= 30:
-                        player.job = 2  # 전사 2차 전직
+            if common.start_on:
+                if game_world.collide(mouse, start):
+                    player.Click_sound.play()
+                    game_world.remove_object(start)
+                    common.start_on = False
+                    del start
+                    background.bgm.repeat_play()
+
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             if talkbox.count == 1:
                 talkbox.count = 0
@@ -105,8 +122,12 @@ def reset_world():
     global ui
     global inven
     global stumps
+    global start
 
     running = True
+
+    start = Start()
+    game_world.add_object(start, 4)
 
     player = Player()
     game_world.add_object(player, 1)
@@ -115,7 +136,6 @@ def reset_world():
     game_world.add_object(background, 0)
     background.player = player
     game_world.add_collision_pair('player:stump', player, None)
-
 
     talkbox = TalkBox()
     game_world.add_object(talkbox, 2)

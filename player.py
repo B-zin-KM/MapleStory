@@ -1,4 +1,4 @@
-from pico2d import load_image, SDLK_UP, SDLK_DOWN, SDLK_RIGHT, SDLK_LEFT, SDLK_LALT, SDLK_LCTRL, SDLK_a, SDLK_SPACE, SDL_KEYUP, SDL_KEYDOWN, get_time, draw_rectangle
+from pico2d import *
 import math
 
 import common
@@ -73,6 +73,7 @@ class Idle:
         if e is not None and up_down(e):
             if common.map == 1:
                 if 865 < player.x < 895 and player.y == 310:
+                    player.portal_sound.play()
                     common.map = 0
                     common.scroll_x = 0
                     common.scroll_y = 0
@@ -80,13 +81,16 @@ class Idle:
                     player.y = 343
             elif common.map == 0:
                 if 1840 < player.x < 1870 and player.y == 343:
+                    player.portal_sound.play()
                     common.map = 1
                     player.x = 880
                     player.y = 310
                 elif 122 < player.x < 152 and player.y == 223:
+                    player.portal_sound.play()
                     player.x = 183
                     player.y = 827
                 elif 1455 < player.x < 1485 and player.y == 950:
+                    player.portal_sound.play()
                     player.x = 1490
                     player.y = 1093
 
@@ -288,6 +292,8 @@ class Attack:
 
     @staticmethod
     def enter(player, e):
+        if player.Lv >= 10:
+            player.PS_sound.play()
         if player.dir == 1:
             player.dir, player.action = 1, 9
         elif player.dir == -1:
@@ -337,6 +343,9 @@ class Attack:
                         player.state_machine.cur_state.exit(player, None)
                         player.state_machine.cur_state = Idle
                         player.state_machine.cur_state.enter(player, None)
+
+            if player.frame == 2:
+                player.Attack_sound.play()
             if player.frame == 3:
                 player.offense()
 
@@ -470,6 +479,39 @@ class Player:
         self.image5 = load_image('파스5.png')
         self.image6 = load_image('파스스윙.png')
 
+        self.jump_sound = load_wav('Jump.mp3')
+        self.jump_sound.set_volume(20)
+
+        self.portal_sound = load_wav('Portal.mp3')
+        self.portal_sound.set_volume(40)
+
+        self.die_sound = load_wav('Tombstone.mp3')
+        self.die_sound.set_volume(40)
+
+        self.LvUp_sound = load_wav('LevelUp.mp3')
+        self.LvUp_sound.set_volume(10)
+
+        self.DropItem_sound = load_wav('DropItem.mp3')
+        self.DropItem_sound.set_volume(20)
+
+        self.JobChanged_sound = load_wav('JobChanged.mp3')
+        self.JobChanged_sound.set_volume(30)
+
+        self.Click_sound = load_wav('BtMouseClick.mp3')
+        self.Click_sound.set_volume(30)
+
+        self.Attack_sound = load_wav('Attack.mp3')
+        self.Attack_sound.set_volume(30)
+
+        self.PS_sound = load_wav('PS.mp3')
+        self.PS_sound.set_volume(30)
+
+        self.StumpDamage_sound = load_wav('StumpDamage.mp3')
+        self.StumpDamage_sound.set_volume(20)
+
+        self.StumpDie_sound = load_wav('StumpDie.mp3')
+        self.StumpDie_sound.set_volume(15)
+
         self.state_machine = StateMachine(self)
         self.state_machine.start()
         self.dir = -1
@@ -499,6 +541,7 @@ class Player:
 
     def jump(self):
         if not self.jumping and not self.air:
+            self.jump_sound.play()
             self.jumping = True
             self.air = True
             self.velocity = self.max_jump_velocity
@@ -537,6 +580,7 @@ class Player:
                 self.invincible = False
             self.invincible_count += 1
         if self.HP >= 168:
+            self.die_sound.play()
             self.HP = 80
             self.EXP = 184
             common.map = 1
@@ -562,8 +606,10 @@ class Player:
             elif event.key == SDLK_SPACE:
                 self.space_key_pressed = True
             elif event.key == SDLK_a:   # 레벨업
+                self.LvUp_sound.play()
                 self.Lv += 1
                 if self.Lv == 10:
+                    self.JobChanged_sound.play()
                     common.attack_power += 5
                 common.attack_power += 1
                 self.level_10 = self.Lv // 10
