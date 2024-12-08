@@ -11,6 +11,7 @@ from inven import Inven
 from common import coordinates_list
 from stump import Stump
 from start import Start
+from clear import Clear
 
 import game_world
 
@@ -123,6 +124,7 @@ def reset_world():
     global inven
     global stumps
     global start
+    global clear
 
     running = True
 
@@ -164,6 +166,9 @@ def reset_world():
     for stump in stumps:
         game_world.add_collision_pair('offense:stump', None, stump)
         game_world.add_collision_pair('player:stump', None, stump)
+
+    clear = Clear()
+    game_world.add_object(clear, 4)
 
     mouse = Mouse()
     game_world.add_object(mouse, 3)

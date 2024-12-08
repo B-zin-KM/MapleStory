@@ -93,6 +93,8 @@ class Idle:
                     player.portal_sound.play()
                     player.x = 1490
                     player.y = 1093
+                elif 1615 < player.x < 1645 and player.y == 1273:
+                    common.clear = True
 
 
     @staticmethod

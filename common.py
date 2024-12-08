@@ -4,6 +4,7 @@ scroll_x = 0
 scroll_y = 0
 attack_power = 10
 start_on = True
+clear = False
 
 coordinates_list = []
 
