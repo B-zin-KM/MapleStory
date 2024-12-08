@@ -75,9 +75,9 @@ class Stump:
                     self.player.EXP -= 50 // self.player.Lv
                     if self.player.EXP <= 0:
                         self.player.LvUp_sound.play()
-                        self.player.JobChanged_sound.play()
                         self.player.Lv += 1
                         if self.player.Lv == 10:
+                            self.player.JobChanged_sound.play()
                             common.attack_power += 5
                         common.attack_power += 1
                         self.player.level_10 = self.player.Lv // 10
