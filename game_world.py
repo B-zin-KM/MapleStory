@@ -34,14 +34,19 @@ def render():
         for o in layer:
             o.draw()
 
+def remove_collision_object(o):
+    for pairs in collision_pairs.values():
+        if o in pairs[0]: pairs[0].remove(o)
+        if o in pairs[1]: pairs[1].remove(o)
 
 def remove_object(o):
     for layer in world:
         if o in layer:
-            layer.remove(o)
+            layer.remove(o)             # world 에서 o를 삭제
+            remove_collision_object(o)  # collision pairs 에서 o를 삭제
+            del o                       # 메모리에서 객체 자체를 삭제
             return
-    print(f'CRITICAL: 존재하지않는 객체{o}를 지우려고 합니다.')
-
+    raise ValueError('Cannot delete non existing object')
 
 def collide(a, b):
     al, ab, ar, at = a.get_bb()

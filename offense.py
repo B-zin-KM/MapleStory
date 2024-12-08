@@ -1,6 +1,9 @@
 from pico2d import *
 import game_world
 
+scroll_x = 0
+scroll_y = 0
+
 class Offense0:
     image = None
 
@@ -13,11 +16,12 @@ class Offense0:
 
     def draw(self):
         # self.image.draw(self.x, self.y)
-        draw_rectangle(*self.get_bb())
+        if self.dir == 1:
+            draw_rectangle(self.x + 22 - scroll_x, self.y - 20 - scroll_y, self.x + 62 - scroll_x, self.y + 10 - scroll_y)
+        elif self.dir == -1:
+            draw_rectangle(self.x - 43 - scroll_x, self.y - 20 - scroll_y, self.x - 3 - scroll_x, self.y + 10 - scroll_y)
 
     def update(self):
-        # if self.x < 25 or self.x > 1600 - 25:
-        #     game_world.remove_object(self)
         pass
 
     def get_bb(self):

@@ -7,6 +7,7 @@ from talk_box import TalkBox
 from ui import UI
 from inven import Inven
 from common import coordinates_list
+from stump import Stump
 
 import game_world
 
@@ -104,6 +105,7 @@ def reset_world():
     global talkbox
     global ui
     global inven
+    global stumps
 
     running = True
 
@@ -135,6 +137,11 @@ def reset_world():
 
     inven = Inven()
     game_world.add_object(inven, 3)
+
+    stumps = [Stump() for _ in range(10)]
+    game_world.add_objects(stumps, 1)
+    for stump in stumps:
+        game_world.add_collision_pair('offense:stump', None, stump)
 
     mouse = Mouse()
     game_world.add_object(mouse, 3)

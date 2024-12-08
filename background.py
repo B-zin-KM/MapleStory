@@ -1,7 +1,11 @@
 from pico2d import load_image, draw_rectangle
+
+import offense
 from common import coordinates_list
 from player import Player
 from bounding_box import Box
+from offense import scroll_x, scroll_y
+from stump import Stump
 
 
 class Back:
@@ -39,6 +43,10 @@ class Back:
 
         Box.scroll_x = self.scroll_x
         Box.scroll_y = self.scroll_y
+        offense.scroll_x = self.scroll_x
+        offense.scroll_y = self.scroll_y
+        Stump.scroll_x = self.scroll_x
+        Stump.scroll_y = self.scroll_y
 
     def draw(self):
         if Back.loc == 0:

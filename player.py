@@ -287,14 +287,10 @@ class Attack:
         Attack.last_time = get_time()
         player.frame = 0
         player.attack = True
-        player.offense()
 
     @staticmethod
     def exit(player, e):
         player.attack = False
-        for offense in player.offenses:
-            game_world.remove_object(offense)
-        player.offenses.clear()
         pass
 
     @staticmethod
@@ -317,6 +313,11 @@ class Attack:
                         player.state_machine.cur_state.exit(player, None)
                         player.state_machine.cur_state = Idle
                         player.state_machine.cur_state.enter(player, None)
+
+            if player.frame == 3:
+                player.offense()
+
+
 
     @staticmethod
     def draw(player):
@@ -430,6 +431,11 @@ class Player:
         box = Box(self)
         platform = coordinates_list[self.loc][0]
 
+        if self.offenses:
+            for offense in self.offenses:
+                game_world.remove_object(offense)
+            self.offenses.clear()
+
         if self.state_machine.cur_state != Idle and self.state_machine.cur_state != Attack and not (self.right_key_pressed or self.left_key_pressed or self.down_key_pressed or self.alt_key_pressed or self.ctrl_key_pressed):
             self.state_machine.cur_state = Idle
             self.state_machine.cur_state.enter(self, None)
@@ -502,4 +508,4 @@ class Player:
         offense = Offense0(self.x, self.y, self.dir)
         game_world.add_object(offense, 3)
         self.offenses.append(offense)
-        # game_world.add_collision_pair('ball:zombie', ball, None)
+        game_world.add_collision_pair('offense:stump', offense, None)
