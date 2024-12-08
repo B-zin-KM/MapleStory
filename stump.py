@@ -7,9 +7,6 @@ from pico2d import *
 
 class Stump:
 
-    scroll_x = 0
-    scroll_y = 0
-
     def __init__(self):
         self.x, self.y = random.randint(600, 1200), 217
         self.image_R = load_image('스텀프r.png')
@@ -45,11 +42,11 @@ class Stump:
     def draw(self):
         if common.map == 0:
             if self.dir == 1:
-                self.image_R.clip_draw(self.frame * 73, 218, 72, 55, self.x - Stump.scroll_x, self.y - Stump.scroll_y)
+                self.image_R.clip_draw(self.frame * 73, 218, 72, 55, self.x - common.scroll_x, self.y - common.scroll_y)
             elif self.dir == -1:
-                self.image_L.clip_draw(self.frame * 72, 218, 72, 55, self.x - Stump.scroll_x, self.y - Stump.scroll_y)
+                self.image_L.clip_draw(self.frame * 72, 218, 72, 55, self.x - common.scroll_x, self.y - common.scroll_y)
             if common.box_on:
-                draw_rectangle(self.x - 37 - Stump.scroll_x, self.y - 27 - Stump.scroll_y, self.x + 37 - Stump.scroll_x, self.y + 30 - Stump.scroll_y)
+                draw_rectangle(self.x - 37 - common.scroll_x, self.y - 27 - common.scroll_y, self.x + 37 - common.scroll_x, self.y + 30 - common.scroll_y)
 
 
     def get_bb(self):

@@ -5,8 +5,6 @@ import offense
 from common import coordinates_list
 from player import Player
 from bounding_box import Box
-from offense import scroll_x, scroll_y
-from stump import Stump
 
 
 class Back:
@@ -36,12 +34,8 @@ class Back:
         self.player.screen_x = self.player.x - self.scroll_x
         self.player.screen_y = self.player.y - self.scroll_y
 
-        Box.scroll_x = self.scroll_x
-        Box.scroll_y = self.scroll_y
-        offense.scroll_x = self.scroll_x
-        offense.scroll_y = self.scroll_y
-        Stump.scroll_x = self.scroll_x
-        Stump.scroll_y = self.scroll_y
+        common.scroll_x = self.scroll_x
+        common.scroll_y = self.scroll_y
 
     def draw(self):
         if common.map == 0:

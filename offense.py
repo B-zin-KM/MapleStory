@@ -2,8 +2,6 @@ from pico2d import *
 import game_world
 import common
 
-scroll_x = 0
-scroll_y = 0
 
 class Offense0:
     image = None
@@ -15,9 +13,9 @@ class Offense0:
     def draw(self):
         if common.box_on:
             if self.dir == 1:
-                draw_rectangle(self.x + 22 - scroll_x, self.y - 20 - scroll_y, self.x + 62 - scroll_x, self.y + 10 - scroll_y)
+                draw_rectangle(self.x + 22 - common.scroll_x, self.y - 20 - common.scroll_y, self.x + 62 - common.scroll_x, self.y + 10 - common.scroll_y)
             elif self.dir == -1:
-                draw_rectangle(self.x - 43 - scroll_x, self.y - 20 - scroll_y, self.x - 3 - scroll_x, self.y + 10 - scroll_y)
+                draw_rectangle(self.x - 43 - common.scroll_x, self.y - 20 - common.scroll_y, self.x - 3 - common.scroll_x, self.y + 10 - common.scroll_y)
 
     def update(self):
         pass

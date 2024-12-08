@@ -417,7 +417,7 @@ class Player:
         self.job = 0                    # 전사 양수 / 마법사 음수
         self.HP = 0
         self.MP = 0
-        self.EXP = 0
+        self.EXP = 184
         self.offenses = []
 
     def jump(self):

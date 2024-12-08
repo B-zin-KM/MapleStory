@@ -32,6 +32,9 @@ class UI:
             draw_rectangle(self.left, self.bottom, self.right, self.top)
 
     def update(self):
+        self.HPgauge = self.player.HP
+        self.MPgauge = self.player.MP
+        self.EXPgauge = self.player.EXP
         pass
 
     def get_bb(self):

@@ -118,6 +118,7 @@ def reset_world():
 
     box = Box(player)
     game_world.add_object(box, 3)
+    game_world.add_collision_pair('player:stump', box, None)
 
     platforms0 = [Platform0(background) for _ in range(len(coordinates_list[0]))]
     game_world.add_objects(platforms0, 3)
@@ -139,6 +140,7 @@ def reset_world():
     game_world.add_objects(stumps, 1)
     for stump in stumps:
         game_world.add_collision_pair('offense:stump', None, stump)
+        game_world.add_collision_pair('player:stump', None, stump)
 
     mouse = Mouse()
     game_world.add_object(mouse, 3)
