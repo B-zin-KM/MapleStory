@@ -140,7 +140,7 @@ def reset_world():
     game_world.add_object(inven, 3)
 
     stumps = [Stump(player) for _ in range(10)]
-    game_world.add_objects(stumps, 1)
+    game_world.add_objects(stumps, 0)
     for stump in stumps:
         game_world.add_collision_pair('offense:stump', None, stump)
         game_world.add_collision_pair('player:stump', None, stump)
@@ -188,7 +188,7 @@ def spawn_stump():
     global stump
 
     stump = Stump(player)
-    game_world.add_object(stump, 1)
+    game_world.add_object(stump, 0)
     game_world.add_collision_pair('offense:stump', None, stump)
     game_world.add_collision_pair('player:stump', None, stump)
 

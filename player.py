@@ -281,6 +281,11 @@ class Attack:
     elapsed_time = 0.0
     last_time = 0.0
 
+    ps_idle_time = 0.05
+    ps_elapsed_time = 0.0
+    ps_last_time = 0.0
+    ps_frame = 0
+
     @staticmethod
     def enter(player, e):
         if player.dir == 1:
@@ -289,17 +294,17 @@ class Attack:
             player.dir, player.action = -1, 10
         Attack.elapsed_time = 0.0
         Attack.last_time = get_time()
+
+        Attack.ps_elapsed_time = 0.0
+        Attack.ps_last_time = get_time()
+
         player.frame = 0
+        Attack.ps_frame = 0
         player.attack = True
-        player.offense()
 
     @staticmethod
     def exit(player, e):
         player.attack = False
-        if player.offenses:
-            for offense in player.offenses:
-                game_world.remove_object(offense)
-            player.offenses.clear()
         pass
 
     @staticmethod
@@ -308,6 +313,16 @@ class Attack:
         time_difference = current_time - Attack.last_time
         Attack.last_time = current_time
         Attack.elapsed_time += time_difference
+
+        ps_current_time = get_time()
+        ps_time_difference = ps_current_time - Attack.ps_last_time
+        Attack.ps_last_time = ps_current_time
+        Attack.ps_elapsed_time += ps_time_difference
+
+
+        if Attack.ps_elapsed_time >= Attack.ps_idle_time:
+            Attack.ps_elapsed_time = 0
+            Attack.ps_frame = Attack.ps_frame + 1
 
         if Attack.elapsed_time >= Attack.idle_time:
             Attack.elapsed_time = 0
@@ -322,6 +337,8 @@ class Attack:
                         player.state_machine.cur_state.exit(player, None)
                         player.state_machine.cur_state = Idle
                         player.state_machine.cur_state.enter(player, None)
+            if player.frame == 3:
+                player.offense()
 
 
     @staticmethod
@@ -345,6 +362,52 @@ class Attack:
                 player.image.clip_draw(19, 137, 42, 66, player.screen_x - 3, player.screen_y - 1)
             elif player.frame == 3:
                 player.image.clip_draw(145, 130, 71, 73, player.screen_x + 10, player.screen_y - 8)
+
+        if player.Lv >= 10:
+            if player.dir == -1:
+                if Attack.ps_frame == 0:
+                    player.image0.clip_draw(0, 0, 164, 156, player.x - common.scroll_x, player.y - common.scroll_y)
+                elif Attack.ps_frame == 1:
+                    player.image1.clip_draw(0, 0, 164, 151, player.x - common.scroll_x, player.y - common.scroll_y)
+                elif Attack.ps_frame == 2:
+                    player.image2.clip_draw(0, 0, 162, 144, player.x - common.scroll_x, player.y - common.scroll_y)
+                elif Attack.ps_frame == 3:
+                    player.image3.clip_draw(0, 0, 143, 134, player.x - common.scroll_x, player.y - common.scroll_y)
+                elif Attack.ps_frame == 4:
+                    player.image4.clip_draw(0, 0, 118, 103, player.x - common.scroll_x, player.y - common.scroll_y)
+                elif Attack.ps_frame == 5:
+                    player.image5.clip_draw(0, 0, 73, 74, player.x - common.scroll_x, player.y - common.scroll_y)
+                elif Attack.ps_frame == 6:
+                    player.image6.clip_draw(0, 0, 113, 81, player.x - common.scroll_x - 25, player.y - common.scroll_y)
+                elif Attack.ps_frame == 7:
+                    player.image6.clip_draw(0, 0, 113, 81, player.x - common.scroll_x - 25, player.y - common.scroll_y)
+                elif Attack.ps_frame == 8:
+                    player.image6.clip_draw(0, 0, 113, 81, player.x - common.scroll_x - 25, player.y - common.scroll_y)
+                elif Attack.ps_frame == 9:
+                    player.image6.clip_draw(0, 0, 113, 81, player.x - common.scroll_x - 25, player.y - common.scroll_y)
+
+            elif player.dir == 1:
+                if Attack.ps_frame == 0:
+                    player.image0.composite_draw(0, 'h', player.x - common.scroll_x + 16, player.y - common.scroll_y)
+                elif Attack.ps_frame == 1:
+                    player.image1.composite_draw(0, 'h', player.x - common.scroll_x + 16, player.y - common.scroll_y)
+                elif Attack.ps_frame == 2:
+                    player.image2.composite_draw(0, 'h', player.x - common.scroll_x + 16, player.y - common.scroll_y)
+                elif Attack.ps_frame == 3:
+                    player.image3.composite_draw(0, 'h', player.x - common.scroll_x + 16, player.y - common.scroll_y)
+                elif Attack.ps_frame == 4:
+                    player.image4.composite_draw(0, 'h', player.x - common.scroll_x + 16, player.y - common.scroll_y)
+                elif Attack.ps_frame == 5:
+                    player.image5.composite_draw(0, 'h', player.x - common.scroll_x + 16, player.y - common.scroll_y)
+
+                elif Attack.ps_frame == 6:
+                    player.image6.composite_draw(0, 'h', player.x - common.scroll_x + 40, player.y - common.scroll_y)
+                elif Attack.ps_frame == 7:
+                    player.image6.composite_draw(0, 'h', player.x - common.scroll_x + 40, player.y - common.scroll_y)
+                elif Attack.ps_frame == 8:
+                    player.image6.composite_draw(0, 'h', player.x - common.scroll_x + 40, player.y - common.scroll_y)
+                elif Attack.ps_frame == 9:
+                    player.image6.composite_draw(0, 'h', player.x - common.scroll_x + 40, player.y - common.scroll_y)
 
 
 class StateMachine:
@@ -398,6 +461,15 @@ class Player:
         self.frame = 0
         self.action = 4
         self.image = load_image('warrior_0.png')
+
+        self.image0 = load_image('파스0.png')
+        self.image1 = load_image('파스1.png')
+        self.image2 = load_image('파스2.png')
+        self.image3 = load_image('파스3.png')
+        self.image4 = load_image('파스4.png')
+        self.image5 = load_image('파스5.png')
+        self.image6 = load_image('파스스윙.png')
+
         self.state_machine = StateMachine(self)
         self.state_machine.start()
         self.dir = -1
@@ -437,6 +509,10 @@ class Player:
         box = Box(self)
         platform = coordinates_list[common.map][0]
 
+        if self.offenses:
+            for offense in self.offenses:
+                game_world.remove_object(offense)
+            self.offenses.clear()
 
         if self.state_machine.cur_state != Idle and self.state_machine.cur_state != Attack and not (self.right_key_pressed or self.left_key_pressed or self.down_key_pressed or self.alt_key_pressed or self.ctrl_key_pressed):
             self.state_machine.cur_state = Idle
@@ -487,6 +563,8 @@ class Player:
                 self.space_key_pressed = True
             elif event.key == SDLK_a:   # 레벨업
                 self.Lv += 1
+                if self.Lv == 10:
+                    common.attack_power += 5
                 common.attack_power += 1
                 self.level_10 = self.Lv // 10
                 self.level_1 = self.Lv % 10
